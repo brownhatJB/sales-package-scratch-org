@@ -1,0 +1,155 @@
+<!--
+  @module            : Real_Estate_Module
+  @description       : LWC component used to show units which satisfy the unit preference set in the record.
+  @namespace         : 
+  @author            : SREERAM.R
+  @group             : Search Page
+  @last modified on  : 06-26-2024
+  @last modified by  : Nisha Tony
+-->
+<template>
+  <lightning-card>
+    <template if:false={prefId}>
+      <c-collapsible-section icon-name="utility:chevrondown">
+        <br />
+        <c-filter onsearch={searchfilter}></c-filter>
+      </c-collapsible-section>
+    </template>
+    <lightning-button
+      class="button slds-var-p-right_small"
+      variant="brand"
+      label="Create Proposal"
+      slot="actions"
+      onclick={handleClickProposal}
+    >
+    </lightning-button>
+    &nbsp;&nbsp;&nbsp;
+    <lightning-button
+      class="button slds-var-p-right_small"
+      variant="brand"
+      label="Shortlist"
+      slot="actions"
+      onclick={handleClick}
+    >
+    </lightning-button>
+    &nbsp;&nbsp;&nbsp;
+    <lightning-button
+      class="button slds-var-p-right_small"
+      variant="brand"
+      label="Purchase"
+      slot="actions"
+      onclick={handlePurchase}
+    >
+    </lightning-button>
+    &nbsp;&nbsp;&nbsp;
+    <lightning-button
+      class="button slds-var-p-right_small"
+      variant="brand"
+      label="Set Payment Plan Option"
+      slot="actions"
+      onclick={handleSetPurchasePlanOption}
+    >
+    </lightning-button>
+    &nbsp;&nbsp;&nbsp;
+    <lightning-button
+      icon-name="utility:close"
+      alternative-text="Close Page"
+      title="Close Page"
+      onclick={closetab}
+      slot="actions"
+      label="Close Page"
+    >
+    </lightning-button>
+    <div class="slds-box">
+      <c-custom-data-types
+        key-field="Id"
+        data={visibleProducts}
+        columns={columns}
+        onrowselection={handleRowSelection}
+      >
+      </c-custom-data-types>
+    </div>
+    <c-pagination records={mydata.data} onsliced={sliceHandler}> </c-pagination>
+  </lightning-card>
+  <template if:true={isModalOpen}>
+    <section
+      role="dialog"
+      tabindex="-1"
+      aria-labelledby="modal-heading-01"
+      aria-modal="true"
+      aria-describedby="modal-content-id-1"
+      class="slds-modal slds-fade-in-open"
+    >
+      <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <button
+            class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+            title="Close"
+            onclick={closeModal}
+          >
+            <lightning-icon
+              icon-name="utility:close"
+              alternative-text="close"
+              variant="inverse"
+              size="small"
+              label="Close Page"
+            >
+            </lightning-icon>
+            <label>Close</label>
+            <span class="slds-assistive-text">Close</span>
+          </button>
+          <h2
+            id="modal-heading-01"
+            class="slds-text-heading_medium slds-hyphenate"
+          >
+            Set Payment Plan For Selected Units
+          </h2>
+        </header>
+        <div
+          class="slds-modal__content slds-var-p-around_medium"
+          id="modal-content-id-1"
+        >
+          <lightning-card>
+            <template iterator:it={records}>
+              <div key={it.value.Id}>
+                <lightning-record-form
+                  record-id={it.value.Id}
+                  object-api-name="Units__c"
+                  fields={fields}
+                  record-type-id={it.value.RecordTypeId}
+                  columns="3"
+                  mode="view"
+                >
+                </lightning-record-form>
+              </div>
+            </template>
+          </lightning-card>
+        </div>
+        <footer class="slds-modal__footer">
+          <button
+            class="slds-button slds-button_neutral"
+            onclick={closeModal}
+            title="Cancel"
+          >
+            Cancel
+          </button>
+          <button
+            class="slds-button slds-button_brand"
+            onclick={submitDetails}
+            title="OK"
+          >
+            OK
+          </button>
+          <button
+            class="slds-button slds-button_brand"
+            onclick={handlePurchase}
+            title="Purchase"
+          >
+            <label>Purchase</label>
+          </button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+</template>
