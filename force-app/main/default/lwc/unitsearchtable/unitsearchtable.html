@@ -1,0 +1,360 @@
+<!--
+  @module             : Real_Estate_Module
+  @description        : LWC component used to search for available units and select them and shortlist , create sales proposal and offers
+  @namespace          : 
+  @author             : SREERAM.R
+  @group              : Search Page
+  @last modified on   : 07-29-2026
+  @last modified by   : SREERAM.R
+-->
+<template>
+  <template if:false={showOfferConfiguration}>
+  <lightning-card class="unit-search-card">
+    <template if:true={NotPreferenceSearch}>
+      <c-collapsible-section icon-name="utility:chevrondown">
+        <br />
+        <c-filter onsearch={searchfilter} object-record-id={recordId}></c-filter>
+      </c-collapsible-section>
+    </template>
+
+    <template if:true={isEnquiry}>
+      <!-- <template if:false={isCreateProposalLoading}>
+        <lightning-button class="button slds-var-p-right_small" variant="brand" label="Create Proposal" slot="actions"
+          onclick={handleClickProposal}>
+        </lightning-button>
+        &nbsp;&nbsp;&nbsp;
+      </template>
+      <template if:true={isCreateProposalLoading}>
+        <lightning-button class="button slds-var-p-right_small" variant="brand" label="Create Proposal" slot="actions"
+          disabled="true">
+        </lightning-button>
+        &nbsp;&nbsp;&nbsp;
+      </template>
+      <template if:false={isShortlistLoading}>
+        <lightning-button class="button slds-var-p-right_small" variant="brand" label="Shortlist" slot="actions"
+          onclick={handleClick}>
+        </lightning-button>
+        &nbsp;&nbsp;&nbsp;
+      </template>
+      <template if:true={isShortlistLoading}>
+        <lightning-button class="button slds-var-p-right_small" variant="brand" label="Shortlist" slot="actions"
+          disabled="true">
+        </lightning-button>
+        &nbsp;&nbsp;&nbsp;
+      </template> -->
+      <template if:false={isPurchaseLoading}>
+        <lightning-button class="button slds-var-p-right_small" variant="brand" label="Purchase" slot="actions"
+          onclick={handlePurchase}>
+        </lightning-button>
+        &nbsp;&nbsp;&nbsp;
+      </template>
+      <template if:true={isPurchaseLoading}>
+        <lightning-button class="button slds-var-p-right_small" variant="brand" label="Purchase" slot="actions"
+          disabled="true">
+        </lightning-button>
+        &nbsp;&nbsp;&nbsp;
+      </template>
+      <!-- <lightning-button class="button slds-var-p-right_small" variant="brand" label="Set Payment Plan Option"
+        slot="actions" onclick={handleSetPurchasePlanOption}>
+      </lightning-button>
+      &nbsp;&nbsp;&nbsp;
+      <lightning-button-icon icon-name="utility:close" alternative-text="Close Page" title="Close Page"
+        onclick={closetab} slot="actions">
+        <label>Close Page</label>
+      </lightning-button-icon> -->
+      <lightning-button-icon icon-name="utility:close" alternative-text="Close Page" title="Close Page"
+        onclick={closetab} slot="actions">
+        <label>Close Page</label>
+      </lightning-button-icon>
+    </template>
+
+    <!-- <template if:true={isPropertyAttributeUpdate}>
+      <lightning-button class="button slds-var-p-right_small" variant="brand" slot="actions" label="Create PAU Units"
+        onclick={handleInvokeBatchJob}>
+      </lightning-button>
+    </template> -->
+
+<div class="table-wrapper">
+    <template if:true={hasData}>
+      <div class="slds-var-p-around_small" style="height: 700px">
+        <c-custom-data-types key-field="Id" data={data} columns={col} load-more-offset="1"
+          onrowselection={handleRowSelection} selected-rows={selectedRecordIds} enable-infinite-loading
+          show-row-number-column onloadmore={handleLoadMore} onrowaction={handleRowAction}>
+        </c-custom-data-types>
+      </div>
+    </template>
+    <template if:false={hasData}>
+      <c-error-message-component></c-error-message-component>
+    </template>
+</div>
+
+<!-- Reservation Processing Overlay -->
+<template if:true={showReservationOverlay}>
+
+    <div class="reservation-overlay">
+
+        <div class="reservation-processing">
+
+            <div class="processing-title">
+                Creating Reservation
+            </div>
+
+            <div class="processing-message">
+                Please wait while the reservation is being processed.
+            </div>
+
+            <div class="slds-m-top_large">
+
+                <lightning-progress-bar
+                    value={progressValue}
+                    size="large">
+                </lightning-progress-bar>
+
+            </div>
+
+            <div class="progress-info">
+
+                <span>{progressStatus}</span>
+
+                <span>{progressValue}%</span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</template>
+
+<template if:true={showUnitSearchOverlay}>
+    <div class="reservation-overlay">
+
+        <div class="reservation-processing">
+
+            <div class="processing-title">
+                Loading Available Units
+            </div>
+
+            <div class="processing-message">
+                Please wait while we retrieve the latest unit availability.
+            </div>
+
+            <div class="loading-spinner-container">
+                <lightning-spinner
+                    alternative-text="Loading Units"
+                    size="large">
+                </lightning-spinner>
+            </div>
+
+        </div>
+
+    </div>
+</template>
+
+  </lightning-card>
+  <template if:true={isModalOpen}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+      aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close"
+            onclick={closeModal}>
+            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small">
+            </lightning-icon>
+            <span class="slds-assistive-text">Close</span>
+            <label>Close</label>
+          </button>
+
+          <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+            Set Payment Plan For Selected Units
+          </h2>
+        </header>
+        <div class="slds-modal__content slds-var-p-around_medium" id="modal-content-id-1">
+          <lightning-card>
+            <template iterator:it={records}>
+              <div key={it.value.Id}>
+                <lightning-record-form record-id={it.value.Id} object-api-name="pflexmet__Units__c" fields={fields}
+                  record-type-id={it.value.RecordTypeId} columns="3" mode="view">
+                </lightning-record-form>
+              </div>
+            </template>
+          </lightning-card>
+        </div>
+        <footer class="slds-modal__footer">
+          <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">
+            <label>Cancel</label>
+          </button>
+
+          <button class="slds-button slds-button_brand" onclick={submitDetails} title="OK">
+            <label>OK</label>
+          </button>
+
+          <button class="slds-button slds-button_brand" onclick={handlePurchase} title="Purchase">
+            <label>Purchase</label>
+          </button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+  <div class={parkingModalClass}>
+    <section class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <h2 class="slds-text-heading_medium">Add Parking Units</h2>
+        </header>
+        <div class="slds-modal__content slds-var-p-around_small">
+          <!-- Conditionally render the datatable if there are records -->
+          <template if:true={isTableVisible}>
+            <div>
+              <lightning-datatable key-field="Id" data={wiredParkingUnitsRecords} columns={column}
+                onrowselection={handleRowSelectionParkingUnits} selected-rows={selectedParkingRecordCheck}>
+              </lightning-datatable>
+            </div>
+          </template>
+
+          <!-- Show error message if there are no records -->
+          <template if:false={isTableVisible}>
+            <c-error-message-component></c-error-message-component>
+          </template>
+        </div>
+        <footer class="slds-modal__footer">
+          <button class="slds-button slds-button_neutral" onclick={closeParkingModal}>Cancel</button>
+          <button class="slds-button slds-button_brand" onclick={handleProceedParking}>
+            <label>Proceed</label>
+          </button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </div>
+
+  <template if:true={showConflictModal}>
+    <section
+      role="dialog"
+      tabindex="-1"
+      class="slds-modal slds-fade-in-open"
+    >
+
+      <div class="slds-modal__container">
+
+        <header class="slds-modal__header">
+
+          <h2 class="slds-text-heading_medium">
+            Conflicting Reservations Found
+          </h2>
+
+        </header>
+
+        <div class="slds-modal__content slds-p-around_medium">
+
+          <p class="slds-m-bottom_medium">
+            Existing offers were found for this unit.
+          </p>
+
+          <lightning-datatable
+            key-field="Id"
+            data={conflictingOffers}
+            columns={conflictColumns}
+            hide-checkbox-column>
+          </lightning-datatable>
+
+        </div>
+
+        <footer class="slds-modal__footer ">
+
+          <div class="btns">
+            <lightning-button
+              label="Close"
+              onclick={closeConflictModal}
+              class="slds-m-right_medium">
+            </lightning-button>
+
+            <template if:false={isProceedLoading}>
+              <lightning-button
+                label="Proceed"
+                onclick={handleProceedWithConflict}
+                variant="brand"  
+              >
+              </lightning-button>
+            </template>
+
+            <template if:true={isProceedLoading}>
+              <button class="pcd-ld-btn">
+                <div class="spinner-container">
+                  <lightning-spinner
+                    alternative-text="Loading"
+                    size="xx-small"
+                    class="loading-spinner"
+                  >
+                  </lightning-spinner>
+                </div>
+                <span class="btn-text">
+                  Proceed
+                </span>
+              </button>
+            </template>
+          </div>
+        </footer>
+
+      </div>
+
+    </section>
+
+    <div class="slds-backdrop slds-backdrop_open"></div>
+
+  </template>
+  </template>
+
+   <!-- Promtion Prompt, 'Apply Promotion?'-->
+    <template if:true={showPromotionPrompt}>
+      <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <h2 class="slds-text-heading_medium">
+              Apply Promotions?
+            </h2>
+          </header>
+          
+          <div class="slds-modal__content slds-p-around_large">
+            <p>
+              You have selected multiple units.
+              Do you want to configure promotion and payment plans before creating the offer?
+            </p>
+          </div>
+          
+          <footer class="slds-modal__footer">
+            <lightning-button
+              label="Skip & Continue"
+              variant="neutral"
+              onclick={handleSkipPromotion}
+              class="slds-m-around_medium">
+            </lightning-button>
+
+            <lightning-button
+              label="Configure Offer"
+              variant="brand"
+              onclick={handleConfigureOffer}>
+            </lightning-button>
+          </footer>
+        </div>
+      </section>
+
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+  <!-- screen 2 : offer configuration -->
+
+  <template if:true={showOfferConfiguration}>
+    <c-offer-configuration
+      selected-units={records}
+      selected-unit-ids={selectedRecordIds}
+      enquiry-id={enquiryId}
+      opportunity-id={opportunityId}
+      unit-parking-map={unitParkingRecordMap}
+      oncancel={handleCancel}
+    >
+    </c-offer-configuration>
+  </template>
+
+</template>

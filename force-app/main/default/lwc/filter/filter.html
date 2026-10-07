@@ -1,0 +1,65 @@
+<!--
+  @module            : Real_Estate_Module
+  @description       : LWC component used to filter units displayed in unit search component
+  @namespace         : 
+  @author            : SREERAM.R
+  @group             : Search Page
+  @last modified on  : 08-09-2024
+  @last modified by  : SREERAM.R
+-->
+<template>
+  <lightning-layout multiple-rows="true">
+    <template for:each={FilterFields} for:item="option">
+      <template if:true={option.options}>
+        <lightning-layout-item
+          key={option.id}
+          size="4"
+          flexibility="auto"
+          class="slds-align-middle slds-var-p-left_small"
+        >
+          <lightning-combobox
+            label={option.label}
+            options={option.options}
+            value={option.value}
+            onchange={handleComboboxChange}
+            data-id={option.name}
+          >
+          </lightning-combobox>
+        </lightning-layout-item>
+      </template>
+      <template if:false={option.options}>
+        <lightning-layout-item
+          key={option.id}
+          size="4"
+          flexibility="auto"
+          class="slds-align-middle slds-var-p-left_small"
+        >
+          <lightning-input
+            label={option.label}
+            placeholder={option.label}
+            type={option.type}
+            onchange={handleInputChange}
+            data-id={option.name}
+          >
+          </lightning-input>
+        </lightning-layout-item>
+      </template>
+    </template>
+    <lightning-layout-item
+      size="1"
+      flexibility="auto"
+      class="slds-align-middle slds-var-p-left_medium slds-var-p-top_medium"
+    >
+      <lightning-button label="Search" onclick={search} variant="brand">
+      </lightning-button>
+    </lightning-layout-item>
+    <lightning-layout-item
+      size="1"
+      flexibility="auto"
+      class="slds-align-middle slds-var-p-left_medium slds-var-p-top_medium"
+    >
+      <lightning-button label="Clear" onclick={clear} variant="brand">
+      </lightning-button>
+    </lightning-layout-item>
+  </lightning-layout>
+</template>
