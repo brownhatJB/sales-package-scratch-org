@@ -1,0 +1,330 @@
+<template>
+
+    <lightning-quick-action-panel
+        header={headerTitle}>
+
+        <div class="action-container">
+
+            <!-- step 1 -->
+            <template if:true={isStepOne}>
+
+                <div class="intro-section">
+
+                    <div class="icon-container">
+                        <lightning-icon
+                            icon-name="utility:event"
+                            size="medium"
+                            alternative-text="Completion">
+                        </lightning-icon>
+                    </div>
+
+                    <div>
+                        <h2 class="title">
+                            Update Completion
+                        </h2>
+
+                        <p class="subtitle">
+                            Choose which completion date you want to update.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="milestone-card">
+
+                    <span class="field-label">
+                        Milestone
+                    </span>
+
+                    <span class="milestone-name">
+                        {milestoneName}
+                    </span>
+
+                </div>
+
+
+                <div class="option-section">
+
+                    <span class="section-label">
+                        Select date type
+                    </span>
+
+
+                    <!-- Tentative -->
+
+                    <button
+                        class={tentativeOptionClass}
+                        onclick={handleTentativeSelection}
+                        disabled={isTentativeDisabled}>
+
+                        <div class="option-icon">
+                            <lightning-icon
+                                icon-name="utility:date_input"
+                                size="small"
+                                alternative-text="">
+                            </lightning-icon>
+                        </div>
+
+                        <div class="option-content">
+
+                            <span class="option-title">
+                                Tentative Completion Date
+                            </span>
+
+                            <span class="option-description">
+
+                                <template if:true={tentativeDate}>
+                                    Current:
+                                    <lightning-formatted-date-time
+                                        value={tentativeDate}
+                                        year="numeric"
+                                        month="short"
+                                        day="2-digit"
+                                        time-zone="UTC">
+                                    </lightning-formatted-date-time>
+                                </template>
+
+                                <template if:false={tentativeDate}>
+                                    No tentative date set
+                                </template>
+
+                            </span>
+
+                        </div>
+
+                        <div class="radio-indicator">
+                            <span class="radio-dot"></span>
+                        </div>
+
+                    </button>
+
+
+                    <!-- Actual -->
+
+                    <button
+                        class={actualOptionClass}
+                        onclick={handleActualSelection}>
+
+                        <div class="option-icon actual">
+                            <lightning-icon
+                                icon-name="utility:success"
+                                size="small"
+                                alternative-text="">
+                            </lightning-icon>
+                        </div>
+
+                        <div class="option-content">
+
+                            <span class="option-title">
+                                Actual Completion Date
+                            </span>
+
+                            <span class="option-description">
+
+                                <template if:true={actualDate}>
+                                    Current:
+                                    <lightning-formatted-date-time
+                                        value={actualDate}
+                                        year="numeric"
+                                        month="short"
+                                        day="2-digit"
+                                        time-zone="UTC">
+                                    </lightning-formatted-date-time>
+                                </template>
+
+                                <template if:false={actualDate}>
+                                    No actual date set
+                                </template>
+
+                            </span>
+
+                        </div>
+
+                        <div class="radio-indicator">
+                            <span class="radio-dot"></span>
+                        </div>
+
+                    </button>
+
+                    <template if:true={isTentativeDisabled}>
+
+                        <div class="info-message">
+
+                            <lightning-icon
+                                icon-name="utility:info"
+                                size="xx-small"
+                                alternative-text="Information">
+                            </lightning-icon>
+
+                            <span>
+                                An Actual Completion Date already exists.
+                                Only the Actual Completion Date can be changed.
+                            </span>
+
+                        </div>
+
+                    </template>
+
+                </div>
+
+            </template>
+
+
+            <!-- step 2 -->
+
+            <template if:true={isStepTwo}>
+
+                <div class="step-header">
+
+                    <button
+                        class="back-button"
+                        onclick={handleBack}>
+
+                        <lightning-icon
+                            icon-name="utility:chevronleft"
+                            size="x-small"
+                            alternative-text="Back">
+                        </lightning-icon>
+
+                        <span>Back</span>
+
+                    </button>
+
+                    <div>
+                        <h2 class="title">
+                            Update {selectedDateLabel}
+                        </h2>
+
+                        <p class="subtitle">
+                            Enter the new date and explain the change.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <!-- Date -->
+
+                <div class="form-section">
+
+                    <lightning-input
+                        class="custom-input"
+                        type="date"
+                        label={selectedDateLabel}
+                        value={newDate}
+                        onchange={handleDateChange}
+                        required>
+                    </lightning-input>
+
+
+                    <!-- Comments -->
+
+                    <lightning-textarea
+                        class="custom-input comments-input"
+                        label="Comments"
+                        placeholder="Add a comment explaining this update..."
+                        value={comments}
+                        onchange={handleCommentsChange}
+                        required
+                        max-length="1000">
+                    </lightning-textarea>
+
+                    <div class="character-count">
+                        {commentLength}/1000
+                    </div>
+
+                </div>
+
+
+                <!-- Summary -->
+
+                <div class="summary-card">
+
+                    <div class="summary-row">
+
+                        <span class="summary-label">
+                            Date Type
+                        </span>
+
+                        <span class="summary-value">
+                            {selectedDateLabel}
+                        </span>
+
+                    </div>
+
+                    <div class="summary-row">
+
+                        <span class="summary-label">
+                            New Date
+                        </span>
+
+                        <span class="summary-value">
+                            <template if:true={newDate}>
+                                <lightning-formatted-date-time
+                                    value={newDate}
+                                    year="numeric"
+                                    month="short"
+                                    day="2-digit"
+                                    time-zone="UTC">
+                                </lightning-formatted-date-time>
+                            </template>
+
+                            <template if:false={newDate}>
+                                Not selected
+                            </template>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </template>
+
+        </div>
+
+
+        <!-- FOOTER -->
+
+        <div slot="footer">
+
+            <template if:true={isStepOne}>
+
+                <lightning-button
+                    label="Cancel"
+                    onclick={handleCancel}>
+                </lightning-button>
+
+                <lightning-button
+                    class="next-button"
+                    variant="brand"
+                    label="Next"
+                    onclick={handleNext}
+                    disabled={isNextDisabled}>
+                </lightning-button>
+
+            </template>
+
+
+            <template if:true={isStepTwo}>
+
+                <lightning-button
+                    label="Cancel"
+                    onclick={handleCancel}>
+                </lightning-button>
+
+                <lightning-button
+                    class="update-button"
+                    variant="brand"
+                    label="Update"
+                    onclick={handleSave}
+                    disabled={isSaveDisabled}>
+                </lightning-button>
+
+            </template>
+
+        </div>
+
+    </lightning-quick-action-panel>
+
+</template>
