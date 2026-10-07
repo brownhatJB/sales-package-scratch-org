@@ -34,17 +34,17 @@ export default class Filter extends LightningElement {
   })
   wiredFields({ error, data }) {
     if (data) {
-this.FilterFields = data.map((jsonString) => JSON.parse(jsonString));
+      this.FilterFields = data.map((jsonString) => JSON.parse(jsonString));
 
-console.log("filter fields JSON: ", JSON.stringify(this.FilterFields, null, 2));
+      console.log("filter fields JSON: ", JSON.stringify(this.FilterFields, null, 2));
 
-this.filterMetadataMap = {};
+      this.filterMetadataMap = {};
 
-this.FilterFields.forEach(field => {
-    this.filterMetadataMap[field.name] = field;
-});
+      this.FilterFields.forEach(field => {
+          this.filterMetadataMap[field.name] = field;
+      });
 
-console.log("filter fields: ", JSON.stringify(this.FilterFields));
+      console.log("filter fields: ", JSON.stringify(this.FilterFields));
     } else if (error) {
       console.log(error);
     }

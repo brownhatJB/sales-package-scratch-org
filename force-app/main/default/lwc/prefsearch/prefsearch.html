@@ -4,25 +4,25 @@
   @namespace         : 
   @author            : SREERAM.R
   @group             : Search Page
-  @last modified on  : 06-26-2024
+  @last modified on  : 29-09-2026
   @last modified by  : Nisha Tony
 -->
 <template>
   <lightning-card>
-    <template if:false={prefId}>
+    <template if:true={prefId}>
       <c-collapsible-section icon-name="utility:chevrondown">
         <br />
-        <c-filter onsearch={searchfilter}></c-filter>
+        <c-filter onsearch={searchfilter} pref-filter-values={FilterValues} object-record-id={prefId}></c-filter>
       </c-collapsible-section>
     </template>
-    <lightning-button
+    <!-- <lightning-button
       class="button slds-var-p-right_small"
       variant="brand"
       label="Create Proposal"
       slot="actions"
       onclick={handleClickProposal}
     >
-    </lightning-button>
+    </lightning-button> -->
     &nbsp;&nbsp;&nbsp;
     <lightning-button
       class="button slds-var-p-right_small"
@@ -42,14 +42,14 @@
     >
     </lightning-button>
     &nbsp;&nbsp;&nbsp;
-    <lightning-button
+    <!-- <lightning-button
       class="button slds-var-p-right_small"
       variant="brand"
       label="Set Payment Plan Option"
       slot="actions"
       onclick={handleSetPurchasePlanOption}
     >
-    </lightning-button>
+    </lightning-button> -->
     &nbsp;&nbsp;&nbsp;
     <lightning-button
       icon-name="utility:close"
@@ -63,13 +63,18 @@
     <div class="slds-box">
       <c-custom-data-types
         key-field="Id"
-        data={visibleProducts}
+        data={data}
         columns={columns}
         onrowselection={handleRowSelection}
+        selected-rows={selectedRecordIds}
+        load-more-offset="10"
+        enable-infinite-loading
+        show-row-number-column
+        onloadmore={handleLoadMore}
       >
       </c-custom-data-types>
     </div>
-    <c-pagination records={mydata.data} onsliced={sliceHandler}> </c-pagination>
+    <!-- <c-pagination records={mydata.data} onsliced={sliceHandler}> </c-pagination> -->
   </lightning-card>
   <template if:true={isModalOpen}>
     <section
@@ -114,7 +119,7 @@
               <div key={it.value.Id}>
                 <lightning-record-form
                   record-id={it.value.Id}
-                  object-api-name="Units__c"
+                  object-api-name="pflexmet__Units__c"
                   fields={fields}
                   record-type-id={it.value.RecordTypeId}
                   columns="3"

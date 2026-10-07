@@ -4,10 +4,10 @@
  * @namespace          :
  * @author             : SREERAM.R
  * @group              : Unit Search
- * @last modified on   : 07-23-2024
- * @last modified by   : Nisha Tony
+ * @last modified on   : 29-09-2026
+ * @last modified by   : Jouhar C
  **/
-import { LightningElement, wire, track } from "lwc";
+import { LightningElement, wire, track, api } from "lwc";
 
 //Salesforce functions
 import { refreshApex } from "@salesforce/apex";
@@ -84,21 +84,20 @@ export default class unitsearchtable extends NavigationMixin(LightningElement) {
   ];
   columns;
   accounts = [];
-  @track FilterValues = {
-    unitType: null,
-    bedrooms: null,
-    minPrice: null,
-    maxPrice: null,
-    property: null,
-    view: null,
-    maxArea: null,
-    minArea: null,
-    floorNumber: null,
-    furnishStatus: null,
-    unitStatus: null,
-    unitName: null
-  };
+  @track FilterValues = {};
+
+  @track displayedFields = [];
+
+  queryFields = "";
+
   @track selectedRecordIds = [];
+  @track data = [];
+  @track items = [];
+  @track recordCount = 20;
+  @track loadMoreStatus = "";
+  @track totalRecountCount = 0;
+
+  @api recordId;
   records;
   wiredRecords;
   error;
@@ -113,31 +112,80 @@ export default class unitsearchtable extends NavigationMixin(LightningElement) {
 
   //Wires
   //get fields in json format to display
-  @wire(getFieldSet, { sObjectName: "Units__c", fieldSetName: "Unit_Search" })
+  @wire(getFieldSet, {
+      sObjectName: "pflexmet__Units__c",
+      fieldSetName: "pflexmet__Unit_Search",
+      recordId: "$prefId"
+  })
   wiredFields({ error, data }) {
-    if (data) {
-      data = JSON.parse(data);
-      let cols = [];
-      data.forEach((currentItem) => {
-        let col;
-        if (currentItem.label === "Property Picture") {
-          col = {
-            label: "Property Picture",
-            type: "customPictureType",
-            typeAttributes: { pictureUrl: { fieldName: "propertyImage__c" } },
-            cellAttributes: { alignment: "center" }
-          };
-        } else {
-          col = { label: currentItem.label, fieldName: currentItem.name };
-        }
-        cols.push(col);
-      });
-      this.columns = cols;
-    } else if (error) {
-      console.log(error);
-      this.error = error;
-      this.columns = undefined;
-    }
+      if (data) {
+          const fieldSetData = JSON.parse(data);
+
+          const cols = [];
+          const fields = [];
+
+          fieldSetData.forEach((currentItem) => {
+              // Build the SELECT field list
+              if (
+                  currentItem.name &&
+                  !fields.includes(currentItem.name)
+              ) {
+                  fields.push(currentItem.name);
+              }
+
+              // Build the table columns
+              let col;
+
+              if (currentItem.label === "Property Picture") {
+                  col = {
+                      label: "Property Picture",
+                      type: "customPictureType",
+                      typeAttributes: {
+                          pictureUrl: {
+                              fieldName: "propertyImage__c"
+                          }
+                      },
+                      cellAttributes: {
+                          alignment: "center"
+                      }
+                  };
+              } else {
+                  col = {
+                      label: currentItem.label,
+                      fieldName: currentItem.name
+                  };
+              }
+
+              cols.push(col);
+          });
+
+          this.columns = cols;
+
+          // Store the field list
+          this.displayedFields = fields;
+
+          // Convert the array into a comma-separated string
+          this.queryCreation(this.displayedFields);
+
+          console.log(
+              "Displayed fields:",
+              JSON.stringify(this.displayedFields)
+          );
+
+          console.log(
+              "queryFields:",
+              this.queryFields
+          );
+      } else if (error) {
+          console.error("Error loading field set:", error);
+
+          this.error = error;
+          this.columns = undefined;
+      }
+  }
+
+  queryCreation(value) {
+      this.queryFields = value.join(", ");
   }
 
   //select units according to filter values
@@ -149,6 +197,7 @@ export default class unitsearchtable extends NavigationMixin(LightningElement) {
     const { data, error } = value;
     if (data) {
       this.records = data;
+      console.log('heyyy units here: ', JSON.stringify(this.records, null, 2));
       this.error = undefined;
     } else if (error) {
       this.error = error;
@@ -157,78 +206,65 @@ export default class unitsearchtable extends NavigationMixin(LightningElement) {
   }
 
   //get page reference values passed from detail page button from which this lwc page is opened
-  @wire(CurrentPageReference) pageRef;
+  @wire(CurrentPageReference)
+  wiredPageRef(pageRef) {
+      if (pageRef) {
+          this.enquiryId = pageRef.state.c__enqRecordId;
+          this.opportunityId = pageRef.state.c__oppRecordId;
+          this.prefId = pageRef.state.c__prefRecordId || null;
 
-  connectedCallback() {
-    this.enquiryId = this.pageRef.state.c__enqRecordId;
-    this.opportunityId = this.pageRef.state.c__oppRecordId; 
-    if (this.pageRef.state.c__prefRecordId) {
-      this.prefId = this.pageRef.state.c__prefRecordId;
-      this.FilterValues = {};
-
-      if (this.pageRef.state.c__bedrooms !== "") {
-        this.FilterValues.bedrooms = this.pageRef.state.c__bedrooms;
+          console.log("Enquiry Id:", this.enquiryId);
+          console.log("Opportunity Id:", this.opportunityId);
+          console.log("Preference Id:", this.prefId);
       }
-      console.log("bedrooms:", this.FilterValues.bedrooms);
-      if (this.pageRef.state.c__unitType !== "") {
-        this.FilterValues.unitType = this.pageRef.state.c__unitType;
-      }
-      if (this.pageRef.state.c__propertyId !== "") {
-        this.FilterValues.property = this.pageRef.state.c__propertyId;
-      }
-      if (this.pageRef.state.c__view !== "") {
-        this.FilterValues.view = this.pageRef.state.c__view;
-      }
-      if (this.pageRef.state.c__floor !== "") {
-        this.FilterValues.floorNumber = this.pageRef.state.c__floor;
-      }
-      if (this.pageRef.state.c__minArea !== "") {
-        this.FilterValues.minArea = parseInt(
-          this.pageRef.state.c__minArea.replace(/,/g, ""),
-          10
-        );
-      }
-      if (this.pageRef.state.c__maxarea !== "") {
-        this.FilterValues.maxArea = parseInt(
-          this.pageRef.state.c__maxarea.replace(/,/g, ""),
-          10
-        );
-      }
-      if (this.pageRef.state.c__minAmt !== "") {
-        this.FilterValues.minPrice = parseFloat(
-          this.pageRef.state.c__minAmt.replace(/[$,]/g, "")
-        );
-        if (!isNaN(this.FilterValues.minPrice)) {
-          console.log("minPrice:", this.FilterValues.minPrice);
-        } else {
-          console.error(
-            "Invalid currency value:",
-            this.pageRef.state.c__minAmt
-          );
-        }
-      }
-      if (this.pageRef.state.c__maxAmt !== "") {
-        this.FilterValues.maxPrice = parseFloat(
-          this.pageRef.state.c__maxAmt.replace(/[$,]/g, "")
-        );
-        if (!isNaN(this.FilterValues.maxPrice)) {
-          console.log("maxPrice:", this.FilterValues.maxPrice);
-        } else {
-          console.error(
-            "Invalid currency value:",
-            this.pageRef.state.c__maxAmt
-          );
-        }
-      }
-      console.log("FilterValues : " + JSON.stringify(this.FilterValues));
-    }
   }
 
   //get units to be displayed
-  @wire(getunits, {
-    filterValues: "$FilterValues"
-  })
-  mydata;
+  loadUnits() {
+    // Do not call Apex until the field list is ready
+    if (!this.queryFields) {
+        console.warn(
+            "Cannot load units: queryFields is empty."
+        );
+        return;
+    }
+
+    console.log(
+        "Sending filters:",
+        JSON.stringify(this.FilterValues)
+    );
+
+    console.log(
+        "Sending queryFields:",
+        this.queryFields
+    );
+
+    getunits({
+        filterJson: JSON.stringify(this.FilterValues),
+        fields: this.queryFields
+    })
+    .then((result) => {
+        console.log(
+            "Units returned from Apex:",
+            JSON.stringify(result, null, 2)
+        );
+
+        this.processData(result);
+        this.error = undefined;
+    })
+    .catch((error) => {
+        console.error(
+            "Error loading units:",
+            JSON.stringify(error)
+        );
+
+        this.error = error;
+        this.data = [];
+        this.items = [];
+        this.totalRecountCount = 0;
+        this.loadMoreStatus = "";
+    });
+  }
 
   //Events
   //handles visible units
@@ -247,107 +283,22 @@ export default class unitsearchtable extends NavigationMixin(LightningElement) {
 
   //pass filter values to variables
   searchfilter(event) {
-    if (event.detail.property) {
-      this.FilterValues = {
-        property: event.detail.property
-      };
-    } else {
-      this.FilterValues = {
-        property: null
-      };
-    }
-    if (event.detail.type) {
-      this.FilterValues = {
-        type: event.detail.type
-      };
-    } else {
-      this.FilterValues = {
-        type: null
-      };
-    }
-    if (event.detail.view) {
-      this.FilterValues = {
-        view: event.detail.view
-      };
-    } else {
-      this.FilterValues = {
-        view: null
-      };
-    }
-    if (event.detail.pricemax) {
-      this.FilterValues = {
-        pricemax: event.detail.pricemax
-      };
-    } else {
-      this.FilterValues = {
-        pricemax: 987456123
-      };
-    }
-    if (event.detail.pricemin) {
-      this.FilterValues = {
-        pricemin: event.detail.pricemin
-      };
-    } else {
-      this.FilterValues = {
-        pricemin: 0
-      };
-    }
-    if (event.detail.areamax) {
-      this.FilterValues = {
-        areamax: event.detail.areamax
-      };
-    } else {
-      this.FilterValues = {
-        areamax: 987456123
-      };
-    }
-    if (event.detail.areamin) {
-      this.FilterValues = {
-        areamin: event.detail.viewareamin
-      };
-    } else {
-      this.FilterValues = {
-        areamin: 0
-      };
-    }
-    if (event.detail.floor) {
-      this.FilterValues = {
-        floor: event.detail.floor
-      };
-    } else {
-      this.FilterValues = {
-        floor: null
-      };
-    }
-    if (event.detail.bedroom) {
-      this.FilterValues = {
-        bedroom: event.detail.bedroom
-      };
-    } else {
-      this.FilterValues = {
-        bedroom: null
-      };
-    }
-    if (event.detail.furnished) {
-      this.FilterValues = {
-        furnished: event.detail.furnished
-      };
-    } else {
-      this.FilterValues = {
-        furnished: null
-      };
-    }
-    if (event.detail.name) {
-      this.FilterValues = {
-        name: event.detail.name
-      };
-    } else {
-      this.FilterValues = {
-        unit: null
-      };
-    }
-  }
+    console.log(
+        "Filter event received:",
+        JSON.stringify(event.detail, null, 2)
+    );
 
+    // The child filter component now sends the complete
+    // dynamic filter structure.
+    this.FilterValues = event.detail || {};
+
+    console.log(
+        "FilterValues:",
+        JSON.stringify(this.FilterValues, null, 2)
+    );
+
+    this.loadUnits();
+  }
   //close unit search and redirect to enquiry
   closetab() {
     this[NavigationMixin.Navigate]({
@@ -570,5 +521,39 @@ export default class unitsearchtable extends NavigationMixin(LightningElement) {
   //refresh wire getting units
   refreshwire() {
     return refreshApex(this.mydata);
+  }
+
+  processData(data) {
+    const result = JSON.parse(JSON.stringify(data));
+
+    this.totalRecountCount = result.length;
+    this.items = result;
+
+    // Reset to first page whenever Apex data changes
+    this.recordCount = 20;
+
+    this.loadInitialData();
+  }
+
+  handleLoadMore() {
+    this.recordCount += 20;
+
+    if (this.recordCount < this.totalRecountCount) {
+        this.data = this.items.slice(0, this.recordCount);
+        this.loadMoreStatus = "Load More";
+    } else {
+        this.data = this.items.slice(0, this.totalRecountCount);
+        this.loadMoreStatus = "";
+    }
+  }
+
+  loadInitialData() {
+    this.data = this.items.slice(0, this.recordCount);
+
+    if (this.totalRecountCount > this.recordCount) {
+        this.loadMoreStatus = "Load More";
+    } else {
+        this.loadMoreStatus = "";
+    }
   }
 }

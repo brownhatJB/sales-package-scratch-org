@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
-		<members>prefsearch</members>
-		<name>LightningComponentBundle</name>
+		<members>Filter_Field_Set_Object_Map.Unit_Search_Table_Columns_for_PrefSearch</members>
+		<members>Unit_Search_Column_Object_Map.Unit_Search_Query_Filter_for_PrefSearch</members>
+		<name>CustomMetadata</name>
 	</types>
 	<version>67.0</version>
 </Package>
