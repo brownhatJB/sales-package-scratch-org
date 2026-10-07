@@ -4,7 +4,7 @@
  * @namespace         :
  * @author            : SREERAM.R
  * @group             : Unit Search
- * @last modified on  : 08-14-2024
+ * @last modified on  : 07-30-2026
  * @last modified by  : SREERAM.R
  **/
 public with sharing class UnitSearchFilterQuery {
@@ -23,16 +23,15 @@ public with sharing class UnitSearchFilterQuery {
     String fieldSetName,
     Id recordId
   ) {
-    
     List<String> fieldList = new List<String>();
     String keyPrefix = String.valueOf(recordId).substring(0, 3);
-    
+
     String objectApiName = recordId.getSObjectType().getDescribe().getName();
 
     // Map<String, Schema.SObjectType> globalDescribeMap = Schema.getGlobalDescribe();
 
     // for (Schema.SObjectType objType : Schema.getGlobalDescribe().values()) {
-     
+
     //   system.debug('objType.getDescribe().getKeyPrefix() : ' + objType.getDescribe().getKeyPrefix());
     //   if (objType.getDescribe().getKeyPrefix() == keyPrefix) {
     //     objectApiName = objType.getDescribe().getName();
@@ -41,7 +40,7 @@ public with sharing class UnitSearchFilterQuery {
     // }
 
     // if (objectApiName != 'Opportunity') {
-    //   objectApiName = 'pflexmet__Units__c';
+    //   objectApiName = 'Units__c';
     // }
 
     System.debug('sObjectName: ' + sObjectName);
@@ -49,44 +48,69 @@ public with sharing class UnitSearchFilterQuery {
     System.debug('objectApiName: ' + objectApiName);
 
     String fieldSetNameSelected = [
-      SELECT pflexmet__Field_Set__c
-      FROM pflexmet__Filter_Field_Set_Object_Map__mdt
-      WHERE pflexmet__Object__c = :objectApiName
+      SELECT Field_Set__c
+      FROM Filter_Field_Set_Object_Map__mdt
+      WHERE Object__c = :objectApiName
       LIMIT 1
     ]
-    .pflexmet__Field_Set__c;
-   
+    .Field_Set__c;
+
+    System.debug(fieldSetNameSelected);
+
     // Initialize the map to store parent object name and its corresponding query
     Map<String, String> queryMap = new Map<String, String>();
 
     SObjectType objTokens = Schema.getGlobalDescribe().get(sObjectName);
     Schema.DescribeSObjectResult objDescribes = objTokens.getDescribe();
-   
+
     // Initialize the field set map
     Map<String, Schema.FieldSet> fieldSetMaps = objDescribes.fieldSets.getMap();
     system.debug('fieldSetMaps : ' + fieldSetMaps);
     for (
       Schema.FieldSetMember f : fieldSetMaps.get(fieldSetNameSelected)
         .getFields()
-        
     ) {
-      
       // Describe the field to get its properties
       Schema.DescribeFieldResult fieldResult = objDescribes.fields.getMap()
         .get(f.getFieldPath())
         .getDescribe();
 
       Schema.DisplayType fieldType = fieldResult.getType();
-      
+
+Boolean supported = true;
+
+switch on fieldType {
+
+    when TEXTAREA,
+         ENCRYPTEDSTRING,
+         URL,
+         MULTIPICKLIST {
+
+        supported = false;
+
+    }
+
+    when else {
+
+        supported = true;
+
+    }
+
+}
+
+if(!supported){
+    continue;
+}
+
       if (fieldType == Schema.DisplayType.REFERENCE) {
         // This is a lookup or master-detail relationship field
         List<Schema.SObjectType> referenceTo = fieldResult.getReferenceTo();
         if (!referenceTo.isEmpty()) {
           // Typically, referenceTo will contain only one object type
           String parentObjectName = referenceTo[0].getDescribe().getName();
-         
+
           String query = 'SELECT Id, Name FROM ' + parentObjectName;
-         
+
           // Add the query to the map with the parent object name as the key
           queryMap.put(parentObjectName, query);
         }
@@ -119,21 +143,84 @@ public with sharing class UnitSearchFilterQuery {
             .getDescribe();
           Schema.DisplayType fieldType = fieldResult.getType();
 
+String operator;
+
+if (fieldResult.isAutoNumber()) {
+
+    operator = '=';
+
+} else {
+
+    switch on fieldType {
+
+        when STRING {
+            operator = 'LIKE';
+        }
+
+        when PICKLIST,
+             BOOLEAN,
+             EMAIL,
+             PHONE,
+             REFERENCE {
+
+            operator = '=';
+        }
+
+        when DATE,
+             DATETIME,
+             CURRENCY,
+             DOUBLE,
+             INTEGER,
+             LONG,
+             PERCENT {
+
+            operator = '<=';
+        }
+
+        when else {
+
+            operator = '';
+        }
+    }
+}
+
+Boolean supported = true;
+
+switch on fieldType {
+
+    when TEXTAREA,
+         ENCRYPTEDSTRING,
+         URL,
+         MULTIPICKLIST {
+
+        supported = false;
+    }
+
+    when else {
+        supported = true;
+    }
+}
+
+if (!supported) {
+    continue;
+}
+
           // Convert the Schema.DisplayType to a more readable format
           String readableFieldType = fieldType.name();
-          String jsonPart =
-            '{"label":"' +
-            f.getLabel() +
-            '","name":"' +
-            f.getFieldPath() +
-            '","type":"' +
-            readableFieldType +
-            '","options":null}';
+String jsonPart =
+    '{"label":"' +
+    f.getLabel() +
+    '","name":"' +
+    f.getFieldPath() +
+    '","type":"' +
+    readableFieldType +
+    '","operator":"' +
+    operator +
+    '","options":null}';
 
           // If the field is a picklist or multi-picklist, get picklist values
           if (
-            readableFieldType == 'PICKLIST' ||
-            readableFieldType == 'MULTIPICKLIST'
+            readableFieldType == 'PICKLIST'
           ) {
             List<Schema.PicklistEntry> picklistEntries = fieldResult.getPicklistValues();
             List<String> picklistValues = new List<String>();
@@ -177,12 +264,12 @@ public with sharing class UnitSearchFilterQuery {
               String nameValue = (String) record.get('Name');
 
               // Construct the JSON string for each record
-              String option =
-                '{"value":"' +
-                String.escapeSingleQuotes(nameValue) +
-                '","label":"' +
-                String.escapeSingleQuotes(nameValue) +
-                '"}';
+String option =
+'{"value":"' +
+record.Id +
+'","label":"' +
+String.escapeSingleQuotes(nameValue) +
+'"}';
 
               // Add the JSON string to the list
               picklistValues.add(option);
