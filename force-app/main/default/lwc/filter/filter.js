@@ -37,13 +37,15 @@ export default class Filter extends LightningElement {
     this._prefFilterValues = value || {};
     this.applyPrefValues();
   }
-
-
+  
   applyPrefValues() {
     console.log('inside applyPrefValues, prefFilterValues:', JSON.stringify(this._prefFilterValues, null, 2));
     const incoming = this._prefFilterValues;
 
-    if (!Object.keys(incoming).length || !this.FilterFields.length) return;
+    if (!Object.keys(incoming).length || !this.FilterFields.length) {
+      this.search();
+      return;
+    };
 
     const sig = JSON.stringify(incoming);
     if (this._appliedKey === sig) return;
@@ -77,7 +79,6 @@ export default class Filter extends LightningElement {
       this.search(); 
     }
   }
-
 
   //Wires
 
