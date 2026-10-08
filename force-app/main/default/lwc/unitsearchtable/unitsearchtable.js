@@ -28,7 +28,7 @@ import getParkingUnits from "@salesforce/apex/GetParkingUnitsUnitSearch.parkingU
 import getFieldSet from "@salesforce/apex/UnitSearchFieldListPreferenceSearch.getFieldSet";
 // import getFieldSetParking from "@salesforce/apex/UnitSearchParkingFieldListSearch.getFieldSet";
 // import getFieldSetPaymentPlanSet from "@salesforce/apex/UnitSearchSetPaymentPlanFieldListSearch.getFieldSet";
-//import savePreference from "@salesforce/apex/ShortlistUnitsController.savePreference";
+import savePreference from "@salesforce/apex/ShortlistUnitsController.savePreference";
 import checkReservationConflict from "@salesforce/apex/CreateOffer.checkReservationConflict";
 import sendConflictAlert from "@salesforce/apex/CreateOffer.sendConflictAlert";
 import validateUnitAvailability from "@salesforce/apex/CreateOffer.validateUnitAvailability";
@@ -629,62 +629,62 @@ export default class unitsearchtable extends NavigationMixin(LightningElement) {
     }
     this.isShortlistLoading = true;
 
-    // try {
-    //   await savePreference({
-    //     unitIds: this.selectedRecordIds,
-    //     opportunityId: this.opportunityId ? this.opportunityId : null,
-    //     enquiryId: this.enquiryId ? this.enquiryId : null,
-    //     leadId: null
-    //   });
-    //   this.showToast(
-    //     "Success",
-    //     "Selected Units are shortlisted successfully",
-    //     "success"
-    //   );
-    //   this.isShortlistLoading = true;
-    //   this[NavigationMixin.Navigate]({
-    //     type: "standard__recordPage",
-    //     attributes: {
-    //       recordId: this.enquiryId ? this.enquiryId : this.opportunityId,
-    //       actionName: "view"
-    //     }
-    //   });
-    // } catch (error) {
-    //   this.showToast("Error", "Error shortlisting unit", "error");
-    //   console.error("Error shortlisting unit:", error);
-    //   this.isShortlistLoading = false;
-    // }
+    try {
+      await savePreference({
+        unitIds: this.selectedRecordIds,
+        opportunityId: this.opportunityId ? this.opportunityId : null,
+        enquiryId: this.enquiryId ? this.enquiryId : null,
+        leadId: null
+      });
+      this.showToast(
+        "Success",
+        "Selected Units are shortlisted successfully",
+        "success"
+      );
+      this.isShortlistLoading = true;
+      this[NavigationMixin.Navigate]({
+        type: "standard__recordPage",
+        attributes: {
+          recordId: this.enquiryId ? this.enquiryId : this.opportunityId,
+          actionName: "view"
+        }
+      });
+    } catch (error) {
+      this.showToast("Error", "Error shortlisting unit", "error");
+      console.error("Error shortlisting unit:", error);
+      this.isShortlistLoading = false;
+    }
 
-    // const recordInputs = this.selectedRecordIds.map((itemId) => {
-    //   const fields = {};
-    //   fields[ID_FIELD.fieldApiName] = itemId;
-    //   fields[ENQUIRY_FIELD.fieldApiName] = this.enquiryId;
-    //   return { fields };
-    // });
-    // // alert(JSON.stringify(recordInputs));
-    // const unitPromises = recordInputs.map((recordInput) =>
-    //   updateRecord(recordInput, { ifUnmodifiedSince: this.lastModifiedDate })
-    // );
-    // Promise.all(unitPromises)
-    //   .then(() => {
-    //     this.showToast(
-    //       "Success",
-    //       "Selected Units are shortlisted successfully",
-    //       "success"
-    //     );
-    //     this[NavigationMixin.Navigate]({
-    //       type: "standard__recordPage",
-    //       attributes: {
-    //         recordId: this.enquiryId ? this.enquiryId : this.opportunityId,
-    //         actionName: "view"
-    //       }
-    //     });
-    //   })
-    //   .catch(() => {
-    //     this.showToast("Error", "Error shortlisting unit", "error");
-    //     this.isShortlistLoading = false;
-    //   });
-    // this.updateEnquiryShortlisted();
+    const recordInputs = this.selectedRecordIds.map((itemId) => {
+      const fields = {};
+      fields[ID_FIELD.fieldApiName] = itemId;
+      fields[ENQUIRY_FIELD.fieldApiName] = this.enquiryId;
+      return { fields };
+    });
+    // alert(JSON.stringify(recordInputs));
+    const unitPromises = recordInputs.map((recordInput) =>
+      updateRecord(recordInput, { ifUnmodifiedSince: this.lastModifiedDate })
+    );
+    Promise.all(unitPromises)
+      .then(() => {
+        this.showToast(
+          "Success",
+          "Selected Units are shortlisted successfully",
+          "success"
+        );
+        this[NavigationMixin.Navigate]({
+          type: "standard__recordPage",
+          attributes: {
+            recordId: this.enquiryId ? this.enquiryId : this.opportunityId,
+            actionName: "view"
+          }
+        });
+      })
+      .catch(() => {
+        this.showToast("Error", "Error shortlisting unit", "error");
+        this.isShortlistLoading = false;
+      });
+    this.updateEnquiryShortlisted();
   }
 
   //Event to create sales proposal with selected unit and redirect to sales proposal if only one is created and redirect to enquiry if multiple are created

@@ -18,7 +18,7 @@
     </template>
 
     <template if:true={isEnquiry}>
-      <!-- <template if:false={isCreateProposalLoading}>
+      <template if:false={isCreateProposalLoading}>
         <lightning-button class="button slds-var-p-right_small" variant="brand" label="Create Proposal" slot="actions"
           onclick={handleClickProposal}>
         </lightning-button>
@@ -41,7 +41,7 @@
           disabled="true">
         </lightning-button>
         &nbsp;&nbsp;&nbsp;
-      </template> -->
+      </template>
       <template if:false={isPurchaseLoading}>
         <lightning-button class="button slds-var-p-right_small" variant="brand" label="Purchase" slot="actions"
           onclick={handlePurchase}>
@@ -54,18 +54,18 @@
         </lightning-button>
         &nbsp;&nbsp;&nbsp;
       </template>
-      <!-- <lightning-button class="button slds-var-p-right_small" variant="brand" label="Set Payment Plan Option"
+      <lightning-button class="button slds-var-p-right_small" variant="brand" label="Set Payment Plan Option"
         slot="actions" onclick={handleSetPurchasePlanOption}>
       </lightning-button>
       &nbsp;&nbsp;&nbsp;
       <lightning-button-icon icon-name="utility:close" alternative-text="Close Page" title="Close Page"
         onclick={closetab} slot="actions">
         <label>Close Page</label>
-      </lightning-button-icon> -->
-      <lightning-button-icon icon-name="utility:close" alternative-text="Close Page" title="Close Page"
+      </lightning-button-icon>
+      <!-- <lightning-button-icon icon-name="utility:close" alternative-text="Close Page" title="Close Page"
         onclick={closetab} slot="actions">
         <label>Close Page</label>
-      </lightning-button-icon>
+      </lightning-button-icon> -->
     </template>
 
     <!-- <template if:true={isPropertyAttributeUpdate}>
