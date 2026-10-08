@@ -24,6 +24,61 @@ export default class Filter extends LightningElement {
   @track FilterFields = [];
   @track fieldValuesMap = {};
   @track filterMetadataMap = {};
+
+  _prefFilterValues = {};
+  _appliedKey;
+
+  @api
+  get prefFilterValues() {
+    return this._prefFilterValues;
+  }
+  set prefFilterValues(value) {
+    console.log('inside prefFilterValues setter, value:', JSON.stringify(value, null, 2));
+    this._prefFilterValues = value || {};
+    this.applyPrefValues();
+  }
+
+
+  applyPrefValues() {
+    console.log('inside applyPrefValues, prefFilterValues:', JSON.stringify(this._prefFilterValues, null, 2));
+    const incoming = this._prefFilterValues;
+
+    if (!Object.keys(incoming).length || !this.FilterFields.length) return;
+
+    const sig = JSON.stringify(incoming);
+    if (this._appliedKey === sig) return;
+    this._appliedKey = sig;
+
+    const newMap = {};
+    this.FilterFields = this.FilterFields.map((field) => {
+      const raw = incoming[field.name];
+      if (raw === undefined || raw === null || raw === "") return field;
+
+      let value = String(raw);
+
+      if (field.options) {
+        if (!field.options.some((o) => String(o.value) === value)) return field;
+      } else if (["DOUBLE", "CURRENCY", "INTEGER", "PERCENT"].includes(field.type)) {
+        value = value.replace(/,/g, "");
+        if (isNaN(Number(value))) return field;
+      }
+
+      newMap[field.name] = {
+        value,
+        operator: field.operator,
+        type: field.type
+      };
+      return { ...field, value };
+    });
+
+    this.fieldValuesMap = { ...this.fieldValuesMap, ...newMap };
+
+    if (Object.keys(newMap).length) {
+      this.search(); 
+    }
+  }
+
+
   //Wires
 
   //get fields in json format to display
@@ -43,6 +98,9 @@ export default class Filter extends LightningElement {
       this.FilterFields.forEach(field => {
           this.filterMetadataMap[field.name] = field;
       });
+
+      this._appliedKey = undefined;   
+      this.applyPrefValues();
 
       console.log("filter fields: ", JSON.stringify(this.FilterFields));
     } else if (error) {

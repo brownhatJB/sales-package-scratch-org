@@ -5,14 +5,14 @@
   @author            : SREERAM.R
   @group             : Search Page
   @last modified on  : 29-09-2026
-  @last modified by  : Nisha Tony
+  @last modified by  : Nisha Tony 
 -->
 <template>
   <lightning-card>
     <template if:true={prefId}>
       <c-collapsible-section icon-name="utility:chevrondown">
         <br />
-        <c-filter onsearch={searchfilter} pref-filter-values={FilterValues} object-record-id={prefId}></c-filter>
+        <c-filter onsearch={searchfilter} pref-filter-values={urlFilterValues} object-record-id={prefId}></c-filter>
       </c-collapsible-section>
     </template>
     <!-- <lightning-button

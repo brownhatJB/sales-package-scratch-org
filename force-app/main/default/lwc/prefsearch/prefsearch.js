@@ -32,6 +32,16 @@ import ENQUIRY_ID_FIELD from "@salesforce/schema/Enquiry__c.Id";
 import STAGE_NAME from "@salesforce/schema/Enquiry__c.Stage__c";
 import OPPORTUNITY_FIELD from "@salesforce/schema/Units__c.Opportunity__c";
 
+const URL_FILTER_MAP = {
+  c__propertyId: "pflexmet__Properties__c",
+  c__unitType:   "pflexmet__Type__c",
+  c__view:       "pflexmet__View__c",
+  c__bedrooms:   "pflexmet__Bedrooms__c",
+  c__maxAmt:     "pflexmet__Unit_Price__c",
+  c__maxarea:    "pflexmet__Total_Area__c",
+  c__floor:      "pflexmet__Floor__c"
+};
+
 //Table columns
 const colum = [
   {
@@ -85,6 +95,7 @@ export default class unitsearchtable extends NavigationMixin(LightningElement) {
   columns;
   accounts = [];
   @track FilterValues = {};
+  @track urlFilterValues = {};
 
   @track displayedFields = [];
 
@@ -208,15 +219,22 @@ export default class unitsearchtable extends NavigationMixin(LightningElement) {
   //get page reference values passed from detail page button from which this lwc page is opened
   @wire(CurrentPageReference)
   wiredPageRef(pageRef) {
-      if (pageRef) {
-          this.enquiryId = pageRef.state.c__enqRecordId;
-          this.opportunityId = pageRef.state.c__oppRecordId;
-          this.prefId = pageRef.state.c__prefRecordId || null;
+    if (pageRef) {
+      const state = pageRef.state || {};
+      this.enquiryId = state.c__enqRecordId;
+      this.opportunityId = state.c__oppRecordId;
+      this.prefId = state.c__prefRecordId || null;
 
-          console.log("Enquiry Id:", this.enquiryId);
-          console.log("Opportunity Id:", this.opportunityId);
-          console.log("Preference Id:", this.prefId);
-      }
+      const urlFilters = {};
+      Object.keys(URL_FILTER_MAP).forEach((param) => {
+        const v = state[param];
+        if (v !== undefined && v !== null && v !== "") {
+          urlFilters[URL_FILTER_MAP[param]] = v;
+        }
+      });
+      this.urlFilterValues = urlFilters;
+      console.log('url filters from page reference:', JSON.stringify(this.urlFilterValues, null, 2));
+    }
   }
 
   //get units to be displayed
