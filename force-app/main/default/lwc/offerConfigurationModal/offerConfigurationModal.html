@@ -1,0 +1,92 @@
+<template>
+    <lightning-modal-header label="Configure Offer"></lightning-modal-header>
+
+    <lightning-modal-body>
+        <div class="modal-grid">
+            <!-- Units -->
+            <div class="panel-card">
+                <div class="panel-title">Selected Units</div>
+                <template for:each={unitCards} for:item="unit">
+                    <div key={unit.id} class={unit.cssClass} data-id={unit.id} onclick={handleUnitClick}>
+                        <div class="unit-header">
+                            <span class="property">{unit.property}</span>
+                            <span class="bhk" if:true={unit.bhk}>{unit.bhk}B</span>
+                        </div>
+                        <div class="unit-name">{unit.name}</div>
+                        <div class="unit-details">Plan: {unit.planName}</div>
+                        <div class="unit-price" if:true={unit.price}>
+                            <span>Price</span>
+                            <span>
+                                <lightning-formatted-number value={unit.price} format-style="currency"
+                                    maximum-fraction-digits="0"></lightning-formatted-number>
+                            </span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Payment plans -->
+            <div class="panel-card">
+                <div class="panel-title">Payment Plan</div>
+
+                <template if:true={isLoading}>
+                    <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                </template>
+
+                <template if:true={noPlans}>
+                    <p class="unit-details">No payment plans available for this unit's property.</p>
+                </template>
+
+                <template for:each={planCards} for:item="plan">
+                    <div key={plan.id} class={plan.cssClass} data-id={plan.id} onclick={handlePlanClick}>
+                        <div class="plan-name">{plan.name}</div>
+                    </div>
+                </template>
+
+                <template if:true={selectedPlanItems.length}>
+                    <div class="payments-header">
+                        <div>Item</div>
+                        <div>Percentage</div>
+                        <div>Based On</div>
+                        <div>Milestone</div>
+                        <div>Due Date</div>
+                    </div>
+                    <template for:each={selectedPlanItems} for:item="item">
+                        <div key={item.id} class="payment-row">
+                            <div>{item.name}</div>
+                            <div>{item.percentage}</div>
+                            <div>{item.basedOn}</div>
+                            <div>{item.milestone}</div>
+                            <div>
+                                <lightning-formatted-date-time if:true={item.dueDate} value={item.dueDate}
+                                    year="numeric" month="short" day="2-digit"></lightning-formatted-date-time>
+                            </div>
+                        </div>
+                    </template>
+                </template>
+            </div>
+
+            <!-- Summary -->
+            <div class="summary-section">
+                <div class="summary-heading">Offer Summary</div>
+                <template for:each={unitCards} for:item="unit">
+                    <div key={unit.id} class="split-up sub-total">
+                        <span>{unit.name}</span>
+                        <span>{unit.planName}</span>
+                    </div>
+                </template>
+                <div class="total">
+                    <span>Units</span>
+                    <span class="total-price">{unitCards.length}</span>
+                </div>
+                <div class="offer-btn" role="button" onclick={handleCreateOffer}>
+                    {createButtonLabel}
+                </div>
+            </div>
+        </div>
+    </lightning-modal-body>
+
+    <lightning-modal-footer>
+        <span class="cancel-btn" onclick={handleCancel}>Cancel</span>
+    </lightning-modal-footer>
+</template>

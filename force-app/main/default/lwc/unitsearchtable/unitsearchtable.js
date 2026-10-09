@@ -45,6 +45,9 @@ import OPPORTUNITY_OBJECT from "@salesforce/schema/Opportunity";
 import STAGE_NAME from "@salesforce/schema/Enquiry__c.Stage__c";
 import ENQUIRY_ID_FIELD from "@salesforce/schema/Enquiry__c.Id";
 
+//impoting child lwc
+import OfferConfigurationModal from "c/offerConfigurationModal";
+
 //Table columns
 const colums = [];
 const columns = [];
@@ -1046,7 +1049,7 @@ export default class unitsearchtable extends NavigationMixin(LightningElement) {
     // }
 
     this.data = this.items.slice(0, this.recordCount);
-    console.log("loadInitialData : " + this.data);
+    console.log("loadInitialData : " + JSON.stringify(this.data, null, 2));
 
     if (this.totalRecountCount > this.recordCount) {
       this.loadMoreStatus = "Load More";
@@ -1258,24 +1261,25 @@ export default class unitsearchtable extends NavigationMixin(LightningElement) {
 
   handlePromotionFlow() {
 
-    if (this.unitSearchTableConfiguration[0]?.pflexmet__Show_Promo_Configuration__c && this.selectedRecordIds.length > 1) {
-      this.isPurchaseLoading = false;
-      this.showPromotionPrompt = true;
+    // if (this.unitSearchTableConfiguration[0]?.pflexmet__Show_Promo_Configuration__c && this.selectedRecordIds.length > 1) {
+    //   this.isPurchaseLoading = false;
+    //   this.showPromotionPrompt = true;
 
-      console.log("records: ", JSON.stringify(this.records, null, 2));
-      console.log(
-        "selected record ids: ",
-        JSON.stringify(this.selectedRecordIds, null, 2)
-      );
-      console.log("enquiry id: ", this.enquiryId);
-      console.log("opportunity id: ", this.opportunityId);
-      console.log(
-        "unitParkingRecordMap",
-        JSON.stringify(this.unitParkingRecordMap, null, 2)
-      );
-    } else {
-      this.createReservation();
-    }
+    //   console.log("records: ", JSON.stringify(this.records, null, 2));
+    //   console.log(
+    //     "selected record ids: ",
+    //     JSON.stringify(this.selectedRecordIds, null, 2)
+    //   );
+    //   console.log("enquiry id: ", this.enquiryId);
+    //   console.log("opportunity id: ", this.opportunityId);
+    //   console.log(
+    //     "unitParkingRecordMap",
+    //     JSON.stringify(this.unitParkingRecordMap, null, 2)
+    //   );
+    // } else {
+    //   this.createReservation();
+    // }
+    this.handleConfigureOffer();
   }
 
   handleSkipPromotion() {
@@ -1290,5 +1294,51 @@ export default class unitsearchtable extends NavigationMixin(LightningElement) {
 
   handleCancel() {
     this.showOfferConfiguration = false;
+  }
+
+  async handleConfigureOffer() {
+    this.isPurchaseLoading = false;
+    this.isProceedLoading = false;
+
+    const units = this.buildModalUnits();
+
+    // Resolves with the created offer Ids, or undefined if the user cancels
+    const offerIds = await OfferConfigurationModal.open({
+      size: "large",
+      description: "Configure offer payment plans",
+      units,
+      enquiryId: this.enquiryId || null,
+      opportunityId: this.opportunityId || null
+    });
+
+    if (!offerIds || !offerIds.length) {
+      return; // cancelled
+    }
+
+    // Same navigation rules as createReservation()
+    this[NavigationMixin.Navigate]({
+      type: "standard__recordPage",
+      attributes: {
+        recordId:
+          offerIds.length > 1
+            ? this.enquiryId || this.opportunityId
+            : offerIds[0],
+        actionName: "view"
+      }
+    });
+  }
+
+  buildModalUnits() {
+    const selected = new Set(this.selectedRecordIds);
+    return (this.allUnits || [])
+      .filter((u) => selected.has(u.Id))
+      .map((u) => ({
+        id: u.Id,
+        name: u.Name,
+        property: u.pflexmet__PropertyName__c,              
+        bhk: u.pflexmet__Bedrooms__c,
+        price: u.pflexmet__Unit_Price__c,
+        defaultPaymentPlanId: u.Default_Payment_Plan__c
+      }));
   }
 }

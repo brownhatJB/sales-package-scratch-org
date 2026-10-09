@@ -27,7 +27,7 @@ Map<String,Object> filters =
     System.debug('Filters : ' + filters);
 
 String query =
-    'SELECT Id , ' + fields +
+    'SELECT Id , Default_Payment_Plan__c, ' + fields +
     ' FROM Units__c' +
     ' WHERE Status__c = \'Available\'' +
     ' AND Type__c != \'Parking\'';
