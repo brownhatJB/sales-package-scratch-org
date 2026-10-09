@@ -65,6 +65,23 @@ public with sharing class OfferConfigurationController {
         return offerIds;
     }
 
+    @AuraEnabled(cacheable=true)
+    public static List<Payment_Plan_template__c> getPaymentPlans(Id unitId) {
+
+        if(unitId == null) {
+            return new List<Payment_Plan_template__c>();
+        }
+
+        Units__c unit = [SELECT Id, Name, Properties__c FROM Units__c WHERE Id =: unitId];
+
+        return [ 
+            SELECT Id, Name, 
+            (SELECT Id, Payment_Item_Master__r.Name, Item_Name__r.Name, Percentage__c, Payment_Based_On__c, Milestone__r.Name, Tentative_Due_Date__c 
+            FROM Template_Items1__r) 
+            FROM Payment_Plan_template__c 
+            WHERE Properties__c =: unit.Properties__c];
+    }
+    
     // helper methods xD
     private static List<Units__c> getUnits(List<String> unitIds) {
         return [
