@@ -26,8 +26,8 @@ import createPAU from "@salesforce/apex/batchApexPAU.createPAU";
 import getUnitsPau from "@salesforce/apex/PauUnitSearchDataRetrieve.getUnits";
 import getParkingUnits from "@salesforce/apex/GetParkingUnitsUnitSearch.parkingUnitsWire";
 import getFieldSet from "@salesforce/apex/UnitSearchFieldListPreferenceSearch.getFieldSet";
-// import getFieldSetParking from "@salesforce/apex/UnitSearchParkingFieldListSearch.getFieldSet";
-// import getFieldSetPaymentPlanSet from "@salesforce/apex/UnitSearchSetPaymentPlanFieldListSearch.getFieldSet";
+import getFieldSetParking from "@salesforce/apex/UnitSearchParkingFieldListSearch.getFieldSet";
+import getFieldSetPaymentPlanSet from "@salesforce/apex/UnitSearchSetPaymentPlanFieldListSearch.getFieldSet";
 import savePreference from "@salesforce/apex/ShortlistUnitsController.savePreference";
 import checkReservationConflict from "@salesforce/apex/CreateOffer.checkReservationConflict";
 import sendConflictAlert from "@salesforce/apex/CreateOffer.sendConflictAlert";
@@ -347,46 +347,46 @@ export default class unitsearchtable extends NavigationMixin(LightningElement) {
   }
 
   //get fields in json format to display for parking units
-  // @wire(getFieldSetParking, { sObjectName: "pflexmet__Units__c", fieldSetName: "pflexmet__Parking_Unit_Search" })
-  // wiredFieldsParking ({ error, data }) {
-  //   if (data) {
-  //     data = JSON.parse(data);
-  //     let cols = [];
-  //     let fields = [];
-  //     data.forEach((currentItem) => {
-  //       fields.push(currentItem.name);
-  //       let col;
-  //       if (currentItem.label === "Property Picture") {
-  //         col = {
-  //           label: "Property Picture",
-  //           type: "customPictureType",
-  //           typeAttributes: { pictureUrl: { fieldName: "propertyImage__c" } },
-  //           cellAttributes: { alignment: "center" }
-  //         };
-  //       } else {
-  //         col = { label: currentItem.label, fieldName: currentItem.name };
-  //       }
-  //       cols.push(col);
-  //     });
-  //     this.column = cols;
-  //     this.displayedFieldsParking = fields;
-  //     this.queryCreationParking(this.displayedFieldsParking);
-  //   } else if (error) {
-  //     console.log(error);
-  //     this.error = error;
-  //     this.column = undefined;
-  //   }
-  // }
+  @wire(getFieldSetParking, { sObjectName: "pflexmet__Units__c", fieldSetName: "pflexmet__Parking_Unit_Search" })
+  wiredFieldsParking ({ error, data }) {
+    if (data) {
+      data = JSON.parse(data);
+      let cols = [];
+      let fields = [];
+      data.forEach((currentItem) => {
+        fields.push(currentItem.name);
+        let col;
+        if (currentItem.label === "Property Picture") {
+          col = {
+            label: "Property Picture",
+            type: "customPictureType",
+            typeAttributes: { pictureUrl: { fieldName: "propertyImage__c" } },
+            cellAttributes: { alignment: "center" }
+          };
+        } else {
+          col = { label: currentItem.label, fieldName: currentItem.name };
+        }
+        cols.push(col);
+      });
+      this.column = cols;
+      this.displayedFieldsParking = fields;
+      this.queryCreationParking(this.displayedFieldsParking);
+    } else if (error) {
+      console.log(error);
+      this.error = error;
+      this.column = undefined;
+    }
+  }
 
-  // @wire(getFieldSetPaymentPlanSet, { sObjectName: 'pflexmet__Units__c', fieldSetName: 'pflexmet__Unit_Search' })
-  // wiredFieldsSetPaymentPlan ({ error, data }) {
-  //   if (data) {
-  //     this.fields = data;
-  //     this.joinFields();
-  //   } else if (error) {
-  //     console.error('Error retrieving fields from field set:', error);
-  //   }
-  // }
+  @wire(getFieldSetPaymentPlanSet, { sObjectName: 'pflexmet__Units__c', fieldSetName: 'pflexmet__Set_payment_plan' })
+  wiredFieldsSetPaymentPlan ({ error, data }) {
+    if (data) {
+      this.fields = data;
+      this.joinFields();
+    } else if (error) {
+      console.error('Error retrieving fields from field set:', error);
+    }
+  }
 
   //wire parking unit settings (mdt)
   // @wire(getParkingUnitsConfiguration)
@@ -820,6 +820,7 @@ export default class unitsearchtable extends NavigationMixin(LightningElement) {
       );
       return;
     }
+    console.log('the selected records: ', JSON.stringify(this.records, null, 2));
     this.isPurchaseLoading = false;
     this.isModalOpen = true;
   }
