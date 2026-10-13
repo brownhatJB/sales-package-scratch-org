@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Receipt Inserted</label>
+    <protected>false</protected>
+    <values>
+        <field>Field_API_Name__c</field>
+        <value xsi:type="xsd:string">Contact__c</value>
+    </values>
+    <values>
+        <field>KYC_Creation_Config__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>KYC_Process_Control__c</field>
+        <value xsi:type="xsd:string">Receipt_Warning</value>
+    </values>
+    <values>
+        <field>Operator__c</field>
+        <value xsi:type="xsd:string">Not Equals</value>
+    </values>
+    <values>
+        <field>Sequence_Number__c</field>
+        <value xsi:type="xsd:double">1.0</value>
+    </values>
+    <values>
+        <field>Value__c</field>
+        <value xsi:type="xsd:string">null</value>
+    </values>
+</CustomMetadata>

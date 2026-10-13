@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
-		<members>ShortlistUnitsController</members>
-		<name>ApexClass</name>
+		<members>Lead.Broker_Account__c</members>
+		<members>Lead.Broker_Contact__c</members>
+		<members>Offer__c.Broker_Account__c</members>
+		<members>Offer__c.Broker_Contact__c</members>
+		<members>Opportunity.Broker_Account__c</members>
+		<members>Opportunity.Broker_Contact__c</members>
+		<members>Opportunity.Contact__c</members>
+		<members>Unit_Sale__c.Broker_Account__c</members>
+		<members>Unit_Sale__c.Broker_Contact__c</members>
+		<name>CustomField</name>
 	</types>
-	<version>67.0</version>
+	<version>68.0</version>
 </Package>

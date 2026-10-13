@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Country_of_Residence__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>KYC Fields</description>
+    <label>Country of Residence</label>
+    <referenceTo>Country__c</referenceTo>
+    <relationshipLabel>Contacts (Country of Residence)</relationshipLabel>
+    <relationshipName>Contacts2</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Stage__c</fullName>
+    <label>Stage</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Submitted</fullName>
+                <default>true</default>
+                <label>Submitted</label>
+            </value>
+            <value>
+                <fullName>Site Visit</fullName>
+                <default>false</default>
+                <label>Site Visit</label>
+            </value>
+            <value>
+                <fullName>Expression of Interest</fullName>
+                <default>false</default>
+                <label>Expression of Interest</label>
+            </value>
+            <value>
+                <fullName>Unit Selection</fullName>
+                <default>false</default>
+                <label>Unit Selection</label>
+            </value>
+            <value>
+                <fullName>Payment Plan selection</fullName>
+                <default>false</default>
+                <label>Payment Plan selection</label>
+            </value>
+            <value>
+                <fullName>SPA Signature</fullName>
+                <default>false</default>
+                <label>SPA Signature</label>
+            </value>
+            <value>
+                <fullName>Payment Completion</fullName>
+                <default>false</default>
+                <label>Payment Completion</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

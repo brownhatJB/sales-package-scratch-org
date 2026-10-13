@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Trigger_Event__c</fullName>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Trigger Event</label>
+    <required>true</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>After Insert</fullName>
+                <default>true</default>
+                <label>After Insert</label>
+            </value>
+            <value>
+                <fullName>After Update</fullName>
+                <default>false</default>
+                <label>After Update</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
