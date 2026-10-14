@@ -3,9 +3,9 @@
     <fullName>Broker_Account__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
     <label>Broker Account</label>
-    <referenceTo>Broker_Accounts__c</referenceTo>
-    <relationshipLabel>Unit Sales</relationshipLabel>
-    <relationshipName>Unit_Sales</relationshipName>
+    <referenceTo>Account</referenceTo>
+    <relationshipLabel>Unit Sales (Broker Account)</relationshipLabel>
+    <relationshipName>Unit_Sales1</relationshipName>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
