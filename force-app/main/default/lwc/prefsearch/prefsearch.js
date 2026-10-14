@@ -431,6 +431,16 @@ export default class unitsearchtable extends NavigationMixin(LightningElement) {
       );
       return;
     }
+
+    if(this.opportunityId == null || this.opportunityId == undefined || this.opportunityId == '') {
+      this.showToast(
+        "No Opportunity Found",
+        "Please create an opportunity first to proceed with the purchase.",
+        "warning"
+      );
+      return;
+    }
+
     const createOfferSalesProposalData = {
       enquiry: encodeURIComponent(this.enquiryValue),
       opportunity : this.opportunityId,
