@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
-		<members>New_Lead_Screen</members>
-		<name>Flow</name>
+		<members>Lead.VIP_Customer__c</members>
+		<name>CustomField</name>
+	</types>
+	<types>
+		<members>Lead.New_Lead</members>
+		<name>WebLink</name>
 	</types>
 	<version>68.0</version>
 </Package>
