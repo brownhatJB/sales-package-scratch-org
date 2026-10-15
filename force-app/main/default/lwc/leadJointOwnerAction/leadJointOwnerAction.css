@@ -1,0 +1,817 @@
+:host {
+    display: block;
+    color: #181818;
+    font-family: "Salesforce Sans", Arial, sans-serif;
+}
+
+.action-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 20rem;
+    max-height: 80vh;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+/* ---------- Header ---------- */
+
+.action-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(135deg, #0a2540 0%, #163f62 100%);
+    color: #ffffff;
+}
+
+.header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    flex-shrink: 0;
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.header-icon lightning-icon {
+    --slds-c-icon-color-foreground-default: #ffffff;
+}
+
+.header-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.header-title {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.header-subtitle {
+    margin: 0.25rem 0 0;
+    color: #dce7f0;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+}
+
+/* ---------- Scrollable Content ---------- */
+
+.action-body {
+    flex: 1;
+    min-height: 0;
+    padding: 1.25rem 1.5rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.action-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.action-body::-webkit-scrollbar-track {
+    background: #f5f7fa;
+}
+
+.action-body::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #c9d2dc;
+}
+
+/* ---------- Lead Summary ---------- */
+
+.lead-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    padding: 1rem;
+    border: 1px solid #e5eaf0;
+    border-radius: 0.75rem;
+    background: #f8fafc;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.summary-label {
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.summary-value {
+    color: #0a2540;
+    font-size: 0.9375rem;
+    font-weight: 700;
+}
+
+.owner-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.75rem;
+    height: 1.75rem;
+    padding: 0 0.5rem;
+    border-radius: 999px;
+    background: #e5edf5;
+    color: #0a2540;
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+/* ---------- Section Heading ---------- */
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.section-title {
+    margin: 0;
+    color: #0a2540;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.section-description {
+    margin: 0.25rem 0 0;
+    color: #64748b;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+}
+
+/* ---------- Add Owner Button ---------- */
+
+.add-owner-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 2.375rem;
+    padding: 0.5rem 0.875rem;
+    border: 1px solid #0a2540;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    color: #0a2540;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background 160ms ease,
+        color 160ms ease,
+        border-color 160ms ease,
+        box-shadow 160ms ease;
+}
+
+.add-owner-button:hover {
+    background: #0a2540;
+    color: #ffffff;
+    box-shadow: 0 3px 8px rgba(10, 37, 64, 0.15);
+}
+
+.add-owner-button:focus-visible {
+    outline: 2px solid #0176d3;
+    outline-offset: 2px;
+}
+
+.add-owner-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* ---------- Owner List ---------- */
+
+.owner-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* ---------- Owner Card ---------- */
+
+.owner-card {
+    position: relative;
+    padding: 1.125rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.875rem;
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.035);
+    transition:
+        border-color 160ms ease,
+        box-shadow 160ms ease;
+}
+
+.owner-card:hover {
+    border-color: #b7c8d9;
+    box-shadow: 0 5px 14px rgba(15, 23, 42, 0.06);
+}
+
+.owner-card.primary-owner {
+    border-color: #d4af37;
+    background: linear-gradient(
+        135deg,
+        #fffdf5 0%,
+        #ffffff 65%
+    );
+    box-shadow: 0 2px 10px rgba(212, 175, 55, 0.09);
+}
+
+.owner-card.primary-owner:hover {
+    border-color: #bd9823;
+    box-shadow: 0 5px 16px rgba(212, 175, 55, 0.13);
+}
+
+/* ---------- Owner Card Header ---------- */
+
+.owner-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.125rem;
+    padding-bottom: 0.875rem;
+    border-bottom: 1px solid #edf0f4;
+}
+
+.owner-card-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.owner-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    border-radius: 0.625rem;
+    background: #eaf0f6;
+    color: #0a2540;
+    font-size: 0.9375rem;
+    font-weight: 800;
+}
+
+.primary-owner .owner-avatar {
+    background: #f7e9ad;
+    color: #765b08;
+}
+
+.owner-heading-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+}
+
+.owner-title {
+    margin: 0;
+    color: #0a2540;
+    font-size: 0.9375rem;
+    font-weight: 700;
+}
+
+.owner-subtitle {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.75rem;
+}
+
+/* ---------- Primary Badge ---------- */
+
+.primary-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.35rem 0.625rem;
+    border: 1px solid #ead68b;
+    border-radius: 999px;
+    background: #fff7d6;
+    color: #795c00;
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.035em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.primary-badge lightning-icon {
+    --slds-c-icon-color-foreground-default: #795c00;
+}
+
+/* ---------- Owner Card Actions ---------- */
+
+.owner-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.set-primary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    min-height: 2rem;
+    padding: 0.375rem 0.625rem;
+    border: 1px solid #d5dde7;
+    border-radius: 0.4375rem;
+    background: #ffffff;
+    color: #334e68;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background 160ms ease,
+        border-color 160ms ease,
+        color 160ms ease;
+}
+
+.set-primary-button:hover {
+    border-color: #0a2540;
+    background: #edf3f8;
+    color: #0a2540;
+}
+
+.set-primary-button:focus-visible {
+    outline: 2px solid #0176d3;
+    outline-offset: 2px;
+}
+
+.set-primary-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.remove-owner-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    min-height: 2rem;
+    padding: 0.375rem 0.625rem;
+    border: 1px solid #f1c7c7;
+    border-radius: 0.4375rem;
+    background: #ffffff;
+    color: #ba0517;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background 160ms ease,
+        border-color 160ms ease;
+}
+
+.remove-owner-button:hover {
+    border-color: #ba0517;
+    background: #fff0f0;
+}
+
+.remove-owner-button:focus-visible {
+    outline: 2px solid #ba0517;
+    outline-offset: 2px;
+}
+
+.remove-owner-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ---------- Form Grid ---------- */
+
+.owner-fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 1rem;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    min-width: 0;
+}
+
+.field-label {
+    color: #334e68;
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+.field-help {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.field-group lightning-input,
+.field-group lightning-combobox {
+    width: 100%;
+}
+
+/* ---------- Allocation Summary ---------- */
+
+.allocation-section {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    background: #f8fafc;
+}
+
+.allocation-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.allocation-title {
+    margin: 0;
+    color: #0a2540;
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.allocation-value {
+    color: #0a2540;
+    font-size: 1rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}
+
+.allocation-track {
+    width: 100%;
+    height: 0.5rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e2e8f0;
+}
+
+.allocation-progress {
+    height: 100%;
+    border-radius: inherit;
+    background: #2e844a;
+    transition: width 220ms ease;
+}
+
+/* Optional status classes, if applied by the template. */
+
+.allocation-progress.invalid {
+    background: #ba0517;
+}
+
+.allocation-progress.warning {
+    background: #dd7a01;
+}
+
+.allocation-message {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    color: #52667a;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+}
+
+.allocation-message.success {
+    color: #216e39;
+}
+
+.allocation-message.error {
+    color: #ba0517;
+}
+
+.allocation-message lightning-icon {
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+}
+
+/* ---------- Validation Banner ---------- */
+
+.validation-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.625rem;
+    margin-top: 1rem;
+    padding: 0.875rem 1rem;
+    border: 1px solid #f1c7c7;
+    border-left: 4px solid #ba0517;
+    border-radius: 0.5rem;
+    background: #fff4f4;
+    color: #8e030f;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+}
+
+.validation-banner lightning-icon {
+    flex-shrink: 0;
+    --slds-c-icon-color-foreground-default: #ba0517;
+}
+
+.validation-banner.warning {
+    border-color: #f5d6a0;
+    border-left-color: #dd7a01;
+    background: #fff8eb;
+    color: #7e4b00;
+}
+
+/* ---------- General Error ---------- */
+
+.error-message {
+    margin-bottom: 1rem;
+    padding: 0.875rem 1rem;
+    border: 1px solid #f1c7c7;
+    border-radius: 0.5rem;
+    background: #fff4f4;
+    color: #ba0517;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+/* ---------- Empty State ---------- */
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: 12rem;
+    padding: 2rem 1.25rem;
+    border: 1px dashed #cbd5e1;
+    border-radius: 0.875rem;
+    background: #f8fafc;
+    text-align: center;
+}
+
+.empty-state-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 1rem;
+    background: #eaf0f6;
+}
+
+.empty-state-title {
+    margin: 0;
+    color: #0a2540;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.empty-state-description {
+    max-width: 25rem;
+    margin: 0;
+    color: #64748b;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+}
+
+/* ---------- Loading State ---------- */
+
+.loading-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: 12rem;
+    padding: 2rem;
+    color: #52667a;
+    font-size: 0.875rem;
+}
+
+.loading-overlay {
+    position: relative;
+    opacity: 0.65;
+    pointer-events: none;
+}
+
+/* ---------- Footer ---------- */
+
+.action-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e5eaf0;
+    background: #ffffff;
+}
+
+.footer-note {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.75rem;
+    line-height: 1.5;
+}
+
+.footer-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+    margin-left: auto;
+}
+
+.cancel-button,
+.save-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 5.5rem;
+    min-height: 2.5rem;
+    padding: 0.625rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background 160ms ease,
+        border-color 160ms ease,
+        box-shadow 160ms ease;
+}
+
+.cancel-button {
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #334e68;
+}
+
+.cancel-button:hover {
+    border-color: #94a3b8;
+    background: #f8fafc;
+}
+
+.save-button {
+    border: 1px solid #0a2540;
+    background: #0a2540;
+    color: #ffffff;
+    box-shadow: 0 2px 4px rgba(10, 37, 64, 0.12);
+}
+
+.save-button:hover {
+    border-color: #163f62;
+    background: #163f62;
+    box-shadow: 0 4px 8px rgba(10, 37, 64, 0.18);
+}
+
+.cancel-button:focus-visible,
+.save-button:focus-visible {
+    outline: 2px solid #0176d3;
+    outline-offset: 2px;
+}
+
+.cancel-button:disabled,
+.save-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* ---------- Utility Classes ---------- */
+
+.muted-text {
+    color: #64748b;
+}
+
+.text-danger {
+    color: #ba0517;
+}
+
+.text-success {
+    color: #2e844a;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.visually-separated {
+    margin-top: 1rem;
+}
+
+/* ---------- Responsive Layout ---------- */
+
+@media (max-width: 640px) {
+    .action-container {
+        max-height: 80vh;
+    }
+
+    .action-header {
+        gap: 0.75rem;
+        padding: 1rem;
+    }
+
+    .header-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .header-title {
+        font-size: 1.0625rem;
+    }
+
+    .header-subtitle {
+        font-size: 0.75rem;
+    }
+
+    .action-body {
+        padding: 1rem;
+    }
+
+    .lead-summary {
+        align-items: flex-start;
+        padding: 0.875rem;
+    }
+
+    .section-heading {
+        align-items: flex-start;
+    }
+
+    .owner-card {
+        padding: 0.875rem;
+    }
+
+    .owner-card-header {
+        align-items: flex-start;
+    }
+
+    .owner-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .owner-fields {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.875rem;
+    }
+
+    .allocation-section {
+        padding: 0.875rem;
+    }
+
+    .action-footer {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 0.875rem 1rem;
+    }
+
+    .footer-note {
+        text-align: center;
+    }
+
+    .footer-actions {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .cancel-button,
+    .save-button {
+        flex: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}

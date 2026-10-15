@@ -5,6 +5,12 @@
 		<name>ApexClass</name>
 	</types>
 	<types>
+		<members>Activity.Interested_Project__c</members>
+		<members>Activity.Status__c</members>
+		<members>Lead.Enquiry_Number__c</members>
+		<name>CustomField</name>
+	</types>
+	<types>
 		<members>appointmentCreationAction</members>
 		<name>LightningComponentBundle</name>
 	</types>

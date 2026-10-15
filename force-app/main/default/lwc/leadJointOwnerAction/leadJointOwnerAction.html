@@ -1,0 +1,413 @@
+<template>
+    <div class="action-container">
+
+        <!-- Header -->
+        <header class="action-header">
+            <div class="header-icon">
+                <lightning-icon
+                    icon-name="standard:contact"
+                    size="medium"
+                    alternative-text="Joint owners">
+                </lightning-icon>
+            </div>
+
+            <div class="header-content">
+                <h1 class="header-title">
+                    Manage Joint Owners
+                </h1>
+
+                <p class="header-subtitle">
+                    Manage Contacts, ownership percentages, and primary ownership.
+                </p>
+            </div>
+        </header>
+
+        <!-- Loading -->
+        <template lwc:if={isLoading}>
+            <div class="loading-container">
+                <lightning-spinner
+                    alternative-text="Loading joint owners"
+                    size="medium">
+                </lightning-spinner>
+
+                <span>Loading joint owners...</span>
+            </div>
+        </template>
+
+        <!-- Main Content -->
+        <template lwc:else>
+            <div class="action-body">
+
+                <!-- Error -->
+                <template lwc:if={loadError}>
+                    <div class="error-message" role="alert">
+                        {loadError}
+                    </div>
+                </template>
+
+                <template lwc:else>
+
+                    <!-- Lead Summary -->
+                    <section class="lead-summary">
+                        <div class="summary-item">
+                            <span class="summary-label">
+                                Buyer Type
+                            </span>
+
+                            <span class="summary-value">
+                                {buyerType}
+                            </span>
+                        </div>
+
+                        <div class="summary-item">
+                            <span class="summary-label">
+                                Joint Owners
+                            </span>
+
+                            <span class="owner-count">
+                                {ownerCount}
+                            </span>
+                        </div>
+                    </section>
+
+                    <!-- Section Heading -->
+                    <section class="owner-manager">
+
+                        <div class="section-heading">
+                            <div>
+                                <h2 class="section-title">
+                                    Owner Details
+                                </h2>
+
+                                <p class="section-description">
+                                    Select a Contact for each owner and
+                                    allocate the ownership percentage.
+                                </p>
+                            </div>
+
+                            <button
+                                type="button"
+                                class="add-owner-button"
+                                onclick={handleAddOwner}
+                                disabled={isSaving}>
+
+                                <lightning-icon
+                                    icon-name="utility:add"
+                                    size="x-small"
+                                    alternative-text="Add">
+                                </lightning-icon>
+
+                                Add Owner
+                            </button>
+                        </div>
+
+                        <!-- Owner Cards -->
+                        <template lwc:if={hasOwners}>
+                            <div class="owner-list">
+
+                                <template
+                                    for:each={displayOwners}
+                                    for:item="owner">
+
+                                    <article
+                                        key={owner.clientKey}
+                                        class="owner-card">
+
+                                        <!-- Owner Card Header -->
+                                        <div class="owner-card-header">
+
+                                            <div class="owner-card-heading">
+                                                <div class="owner-avatar">
+                                                    {owner.ownershipOrder}
+                                                </div>
+
+                                                <div class="owner-heading-text">
+                                                    <h3 class="owner-title">
+                                                        Owner {owner.ownershipOrder}
+                                                    </h3>
+
+                                                    <p class="owner-subtitle">
+                                                        Ownership details
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="owner-actions">
+
+                                                <!-- Primary Badge -->
+                                                <template lwc:if={owner.isPrimary}>
+                                                    <span class="primary-badge">
+                                                        <lightning-icon
+                                                            icon-name="utility:check"
+                                                            size="xx-small"
+                                                            alternative-text="Primary">
+                                                        </lightning-icon>
+
+                                                        Primary
+                                                    </span>
+                                                </template>
+
+                                                <!-- Set Primary -->
+                                                <template lwc:else>
+                                                    <button
+                                                        type="button"
+                                                        class="set-primary-button"
+                                                        data-id={owner.clientKey}
+                                                        onclick={handleSetPrimary}
+                                                        disabled={isSaving}>
+
+                                                        <lightning-icon
+                                                            icon-name="utility:favorite"
+                                                            size="xx-small"
+                                                            alternative-text="Set primary">
+                                                        </lightning-icon>
+
+                                                        Set Primary
+                                                    </button>
+                                                </template>
+
+                                                <!-- Remove Owner -->
+                                                <button
+                                                    type="button"
+                                                    class="remove-owner-button"
+                                                    data-id={owner.clientKey}
+                                                    onclick={handleRemoveOwner}
+                                                    disabled={owner.removeDisabled}>
+
+                                                    <lightning-icon
+                                                        icon-name="utility:delete"
+                                                        size="xx-small"
+                                                        alternative-text="Remove owner">
+                                                    </lightning-icon>
+
+                                                    Remove
+                                                </button>
+
+                                            </div>
+                                        </div>
+
+                                        <!-- Owner Fields -->
+                                        <div class="owner-fields">
+
+                                            <!-- Contact Lookup -->
+                                            <div class="field-group">
+                                                <lightning-record-picker
+                                                    label="Contact"
+                                                    placeholder="Search Contacts..."
+                                                    object-api-name="Contact"
+                                                    value={owner.customerContactId}
+                                                    data-id={owner.clientKey}
+                                                    onchange={handleContactChange}
+                                                    required
+                                                    disabled={isSaving}>
+                                                </lightning-record-picker>
+
+                                                <p class="field-help">
+                                                    Search and select an existing Contact.
+                                                </p>
+                                            </div>
+
+                                            <!-- Customer Type -->
+                                            <div class="field-group">
+                                                <lightning-combobox
+                                                    label="Customer Type"
+                                                    value={owner.customerType}
+                                                    options={customerTypeValues}
+                                                    data-id={owner.clientKey}
+                                                    data-field="customerType"
+                                                    onchange={handleFieldChange}
+                                                    placeholder="Select customer type"
+                                                    required
+                                                    disabled={isSaving}>
+                                                </lightning-combobox>
+                                            </div>
+
+                                            <!-- Ownership Order -->
+                                            <div class="field-group">
+                                                <lightning-input
+                                                    type="number"
+                                                    label="Ownership Order"
+                                                    value={owner.orderInput}
+                                                    data-id={owner.clientKey}
+                                                    data-field="ownershipOrder"
+                                                    onchange={handleFieldChange}
+                                                    min="1"
+                                                    step="1"
+                                                    required
+                                                    disabled={isSaving}>
+                                                </lightning-input>
+
+                                                <p class="field-help">
+                                                    Primary ownership is always order 1.
+                                                </p>
+                                            </div>
+
+                                            <!-- Ownership Percentage -->
+                                            <div class="field-group">
+                                                <lightning-input
+                                                    type="number"
+                                                    label="Ownership Percentage (%)"
+                                                    value={owner.percentageInput}
+                                                    data-id={owner.clientKey}
+                                                    data-field="ownershipPercentage"
+                                                    onchange={handleFieldChange}
+                                                    min="0.01"
+                                                    max="100"
+                                                    step="0.01"
+                                                    required
+                                                    disabled={isSaving}>
+                                                </lightning-input>
+
+                                                <p class="field-help">
+                                                    Enter a value greater than 0 and
+                                                    no greater than 100.
+                                                </p>
+                                            </div>
+
+                                        </div>
+                                    </article>
+                                </template>
+                            </div>
+                        </template>
+
+                        <!-- Empty State -->
+                        <template lwc:else>
+                            <div class="empty-state">
+
+                                <div class="empty-state-icon">
+                                    <lightning-icon
+                                        icon-name="standard:contact"
+                                        size="large"
+                                        alternative-text="No owners">
+                                    </lightning-icon>
+                                </div>
+
+                                <h3 class="empty-state-title">
+                                    No joint owners added
+                                </h3>
+
+                                <p class="empty-state-description">
+                                    Add an owner to start managing Contact
+                                    details and ownership allocation.
+                                </p>
+
+                            </div>
+                        </template>
+
+                    </section>
+
+                    <!-- Allocation Summary -->
+                    <template lwc:if={hasOwners}>
+                        <section class="allocation-section">
+
+                            <div class="allocation-header">
+                                <h3 class="allocation-title">
+                                    Total Ownership Allocation
+                                </h3>
+
+                                <span class="allocation-value">
+                                    {totalPercentage}%
+                                </span>
+                            </div>
+
+                            <div
+                                class="allocation-track"
+                                role="progressbar"
+                                aria-label="Ownership allocation"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                aria-valuenow={totalPercentage}>
+
+                                <div
+                                    class="allocation-progress"
+                                    style={allocationStyle}>
+                                </div>
+                            </div>
+
+                            <div class="allocation-message">
+                                <lightning-icon
+                                    icon-name={allocationIcon}
+                                    size="x-small"
+                                    alternative-text="Allocation status">
+                                </lightning-icon>
+
+                                <span>{allocationMessage}</span>
+                            </div>
+
+                        </section>
+                    </template>
+
+                    <!-- Primary Owner Validation -->
+                    <template lwc:if={hasInvalidPrimaryCount}>
+                        <div class="validation-banner" role="alert">
+                            <lightning-icon
+                                icon-name="utility:warning"
+                                size="small"
+                                alternative-text="Warning">
+                            </lightning-icon>
+
+                            Exactly one owner must be marked as primary.
+                        </div>
+                    </template>
+
+                    <!-- Allocation Validation -->
+                    <template lwc:if={hasOwners}>
+                        <template lwc:if={percentageIsValid}>
+                            <!-- Allocation is valid -->
+                        </template>
+
+                        <template lwc:else>
+                            <div class="validation-banner" role="alert">
+                                <lightning-icon
+                                    icon-name="utility:warning"
+                                    size="small"
+                                    alternative-text="Warning">
+                                </lightning-icon>
+
+                                Ownership percentages must total exactly 100%
+                                before saving.
+                            </div>
+                        </template>
+                    </template>
+
+                </template>
+            </div>
+        </template>
+
+        <!-- Footer -->
+        <footer class="action-footer">
+
+            <p class="footer-note">
+                All owner details must be valid before saving.
+            </p>
+
+            <div class="footer-actions">
+
+                <lightning-button
+                    label="Cancel"
+                    variant="neutral"
+                    onclick={handleCancel}
+                    disabled={isSaving}>
+                </lightning-button>
+
+                <lightning-button
+                    label={saveLabel}
+                    variant="brand"
+                    icon-name="utility:save"
+                    onclick={handleSave}
+                    disabled={saveDisabled}>
+                </lightning-button>
+
+            </div>
+        </footer>
+
+        <!-- Saving Spinner -->
+        <template lwc:if={isSaving}>
+            <lightning-spinner
+                alternative-text="Saving joint owners"
+                size="medium">
+            </lightning-spinner>
+        </template>
+
+    </div>
+</template>
