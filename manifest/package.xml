@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
-		<members>Lead.VIP_Customer__c</members>
-		<name>CustomField</name>
-	</types>
-	<types>
-		<members>Lead.New_Lead</members>
-		<name>WebLink</name>
+		<members>FilterLogicEvaluator</members>
+		<members>FilterLogicEvaluatorTest</members>
+		<members>KYCCreationService</members>
+		<members>KYCCreationServiceTest</members>
+		<members>KYCValidationService</members>
+		<members>KYCValidationServiceTest</members>
+		<members>KYCWarningEventPublisher</members>
+		<members>KYCWarningEventPublisherTest</members>
+		<members>LeadKYCHelper</members>
+		<members>LeadKYCHelperTest</members>
+		<members>MilestoneCompletionActionController</members>
+		<members>MilestoneCompletionActionControllerTest</members>
+		<members>OfferConfigurationController</members>
+		<members>OfferConfigurationControllerTest</members>
+		<members>OfferTriggerMapOppBrokerDetails</members>
+		<members>OfferTriggerMapOppBrokerDetailsTest</members>
+		<members>UnitSearchConfigurationController</members>
+		<members>UnitSearchConfigurationControllerTest</members>
+		<name>ApexClass</name>
 	</types>
 	<version>68.0</version>
 </Package>

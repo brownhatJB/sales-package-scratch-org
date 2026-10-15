@@ -267,4 +267,83 @@ private class KYCCreationServiceTest {
             System.assert(true, 'Bulk afterInsert completed without error');
         }
     }
+    
+    @IsTest
+    static void testEvaluateCondition_AllOperators() {
+        KYC_Conditions_Config__mdt cond =
+            new KYC_Conditions_Config__mdt();
+    
+        cond.Value__c = 'Active';
+        cond.Operator__c = 'Equals';
+        System.assertEquals(
+            true,
+            KYCCreationService.evaluateCondition('Active', cond)
+        );
+        System.assertEquals(
+            false,
+            KYCCreationService.evaluateCondition('Inactive', cond)
+        );
+    
+        cond.Operator__c = 'Not Equals';
+        System.assertEquals(
+            true,
+            KYCCreationService.evaluateCondition('Inactive', cond)
+        );
+        System.assertEquals(
+            false,
+            KYCCreationService.evaluateCondition('Active', cond)
+        );
+    
+        cond.Operator__c = 'Greater Than';
+        cond.Value__c = '10';
+        System.assertEquals(
+            true,
+            KYCCreationService.evaluateCondition(20, cond)
+        );
+        System.assertEquals(
+            false,
+            KYCCreationService.evaluateCondition(5, cond)
+        );
+    
+        cond.Operator__c = 'Less Than';
+        cond.Value__c = '10';
+        System.assertEquals(
+            true,
+            KYCCreationService.evaluateCondition(5, cond)
+        );
+        System.assertEquals(
+            false,
+            KYCCreationService.evaluateCondition(20, cond)
+        );
+    }
+    
+    @IsTest
+    static void testEvaluateCondition_NullAndInvalidValues() {
+        KYC_Conditions_Config__mdt cond =
+            new KYC_Conditions_Config__mdt(
+                Operator__c = 'Equals',
+                Value__c = 'Active'
+            );
+    
+        System.assertEquals(
+            false,
+            KYCCreationService.evaluateCondition(null, cond)
+        );
+    
+        cond.Operator__c = 'Greater Than';
+        cond.Value__c = 'NotANumber';
+    
+        System.assertEquals(
+            false,
+            KYCCreationService.evaluateCondition(20, cond)
+        );
+    
+        cond.Operator__c = 'Unsupported Operator';
+    
+        System.assertEquals(
+            false,
+            KYCCreationService.evaluateCondition('Active', cond)
+        );
+    }
+
 }

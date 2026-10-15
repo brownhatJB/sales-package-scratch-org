@@ -129,6 +129,7 @@ public without sharing class KYCCreationService implements TriggerAction.AfterIn
     }
     
     //Evaluates single condition dynamically
+    @TestVisible
     private static Boolean evaluateCondition(Object fieldValue, KYC_Conditions_Config__mdt cond) {
         
         if (fieldValue == null) 

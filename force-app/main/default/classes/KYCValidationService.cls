@@ -13,6 +13,9 @@
 **/
 public with sharing class KYCValidationService implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate {
     
+    @TestVisible private static List<KYC_Process_Control__mdt> mockConfigs;
+	@TestVisible private static List<KYC_Conditions_Config__mdt> mockConditions;
+    
     // ============= BEFORE INSERT =======================
     public void beforeInsert(List<sObject> records){
         
@@ -195,6 +198,7 @@ public with sharing class KYCValidationService implements TriggerAction.BeforeIn
     }
     
     //Evaluates single condition dynamically
+    @TestVisible
     private static Boolean evaluateCondition(Object fieldValue, KYC_Conditions_Config__mdt cond) {
         
         if (fieldValue == null) 

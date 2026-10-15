@@ -9,7 +9,13 @@ public without sharing class LeadKYCHelper implements TriggerAction.AfterUpdate,
     }
     
     public static void updateLeadKYCStatus(List<Lead> leads) {
-        Set<Id> contactIds = new Set<Id>();
+        if (leads == null || leads.isEmpty()) {
+            return;
+        }
+
+    Set<Id> contactIds = new Set<Id>();
+
+    // Keep the remaining existing logic unchanged.
 
         for(Lead lead : leads) {
             if(lead.Contact__c != null) {
