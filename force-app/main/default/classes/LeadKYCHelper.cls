@@ -27,7 +27,7 @@ public without sharing class LeadKYCHelper implements TriggerAction.AfterUpdate,
             contactKycStatusMap.put(contact.Id, contact.KYC_Status__c);
         }
 
-        List<Lead> associatedLeads = [SELECT Id, KYC_Status__c, Contact__c, All_Documents_Validated__c FROM Lead WHERE Contact__c IN :contactIds];
+        List<Lead> associatedLeads = [SELECT Id, KYC_Status__c, Contact__c, All_Documents_Validated__c, Stage__c FROM Lead WHERE Contact__c IN :contactIds];
 
         List<Lead> leadsToUpdate = new List<Lead>();
         for(Lead lead : associatedLeads) {
