@@ -1,0 +1,127 @@
+<template>
+    <div class="booking-container">
+
+        <!-- Header -->
+        <div class="booking-header">
+            <div>
+                <p class="booking-eyebrow">APPOINTMENT</p>
+                <h2>Book an Appointment</h2>
+                <p class="booking-subtitle">
+                    Choose a convenient date and time for your consultation.
+                </p>
+            </div>
+        </div>
+
+        <div class="booking-divider"></div>
+
+        <!-- Success -->
+        <template if:true={bookingSuccess}>
+            <div class="booking-success">
+                <div class="success-icon">✓</div>
+                <div>
+                    <h3>Appointment Booked</h3>
+                    <p>Your appointment has been successfully scheduled.</p>
+                </div>
+            </div>
+        </template>
+
+        <!-- Error -->
+        <template if:true={bookingError}>
+            <div class="booking-error">
+                {bookingError}
+            </div>
+        </template>
+
+        <!-- Form -->
+        <template if:false={bookingSuccess}>
+
+            <!-- Date -->
+            <div class="form-group">
+                <label for="appointmentDate">
+                    Appointment Date
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    id="appointmentDate"
+                    type="date"
+                    value={formDate}
+                    min={todayDate}
+                    class={dateInputClass}
+                    onchange={handleDateChange}
+                />
+
+                <template if:true={dateError}>
+                    <span class="field-error">{dateError}</span>
+                </template>
+            </div>
+
+            <!-- Time -->
+            <div class="form-group">
+                <label>
+                    Start Time
+                    <span class="required">*</span>
+                </label>
+
+                <div class="time-grid">
+                    <template for:each={timeSlots} for:item="slot">
+                        <button
+                            key={slot.value}
+                            type="button"
+                            class={slot.className}
+                            data-hour={slot.value}
+                            onclick={handleTimeSelect}
+                        >
+                            {slot.label}
+                        </button>
+                    </template>
+                </div>
+
+                <template if:true={timeError}>
+                    <span class="field-error">{timeError}</span>
+                </template>
+
+                <template if:true={formEndTimeLabel}>
+                    <div class="end-time">
+                        Appointment ends at:
+                        <strong>{formEndTimeLabel}</strong>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Notes -->
+            <div class="form-group">
+                <label for="appointmentNotes">
+                    Notes
+                    <span class="optional">(Optional)</span>
+                </label>
+
+                <textarea
+                    id="appointmentNotes"
+                    rows="4"
+                    placeholder="Anything you'd like us to know?"
+                    value={formNotes}
+                    onchange={handleNotesChange}
+                ></textarea>
+            </div>
+
+            <!-- Book -->
+            <button
+                class="btn-book"
+                type="button"
+                onclick={submitBooking}
+                disabled={isBooking}
+            >
+                <template if:true={isBooking}>
+                    <span class="spinner"></span>
+                    Booking...
+                </template>
+
+                <template if:false={isBooking}>
+                    Book Appointment
+                </template>
+            </button>
+
+        </template>
+    </div>
+</template>

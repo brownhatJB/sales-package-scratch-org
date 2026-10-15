@@ -420,6 +420,12 @@
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>Sale_Through__c</field>
+            <value>
+                <elementReference>LeadRecord.Sale_Through__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>Street</field>
             <value>
                 <elementReference>Street_custom</elementReference>
@@ -727,6 +733,20 @@
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>LeadRecord.VIP_Customer__c</objectFieldReference>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
+                </fields>
+                <fields>
+                    <fieldType>ObjectProvided</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>false</isRequired>
+                    <objectFieldReference>LeadRecord.Sale_Through__c</objectFieldReference>
                     <styleProperties>
                         <verticalAlignment>
                             <stringValue>top</stringValue>
@@ -1119,10 +1139,10 @@
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
                 <conditions>
-                    <leftValueReference>Lead_Source_custom2</leftValueReference>
+                    <leftValueReference>LeadRecord.Sale_Through__c</leftValueReference>
                     <operator>EqualTo</operator>
                     <rightValue>
-                        <stringValue>Broker Reference</stringValue>
+                        <stringValue>Agent</stringValue>
                     </rightValue>
                 </conditions>
             </visibilityRule>
