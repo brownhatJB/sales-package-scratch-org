@@ -1,4 +1,3 @@
-
 public with sharing class LeadJointOwnerController {
 
     private static final String BUYER_TYPE_INDIVIDUAL = 'Individual';

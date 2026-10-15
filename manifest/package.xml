@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
-		<members>AppointmentController</members>
+		<members>LeadJointOwnerController</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
-		<members>Activity.Interested_Project__c</members>
-		<members>Activity.Status__c</members>
-		<members>Lead.Enquiry_Number__c</members>
+		<members>Joint_Owner__c.IsPrimary__c</members>
 		<name>CustomField</name>
 	</types>
 	<types>
-		<members>appointmentCreationAction</members>
+		<members>leadJointOwnerAction</members>
 		<name>LightningComponentBundle</name>
 	</types>
 	<types>
-		<members>Lead.Create_Appointment</members>
+		<members>Lead.Manage_Joint_Owners</members>
 		<name>QuickAction</name>
 	</types>
 	<version>68.0</version>
