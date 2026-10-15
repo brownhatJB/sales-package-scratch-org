@@ -1,3 +1,13 @@
+/**
+ * @module            : Real_Estate_Module
+ * @description       : Milestone Completion Action Controller
+ * @namespace         :
+ * @author            : Jouhar C
+ * @group             : Unit Search
+ * @last modified on  : 10-Oct-2026
+ * @last modified by  : Jouhar C
+ **/
+
 public with sharing class MilestoneCompletionActionController {
 
     public class MilestoneData {
