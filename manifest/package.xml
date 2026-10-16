@@ -9,6 +9,10 @@
 		<name>CustomField</name>
 	</types>
 	<types>
+		<members>Create_Primary_Joint_Owner</members>
+		<name>Flow</name>
+	</types>
+	<types>
 		<members>leadJointOwnerAction</members>
 		<name>LightningComponentBundle</name>
 	</types>
