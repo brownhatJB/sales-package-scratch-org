@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
-		<members>LeadJointOwnerController</members>
+		<members>AutoInvoiceDashboardService</members>
+		<members>AutoInvoiceDashboardServiceTest</members>
+		<members>AutoInvoiceService</members>
+		<members>AutoInvoiceServiceTest</members>
+		<members>InvoiceCreationScheduler</members>
+		<members>InvoiceCreationSchedulerTest</members>
 		<name>ApexClass</name>
-	</types>
-	<types>
-		<members>Joint_Owner__c.IsPrimary__c</members>
-		<name>CustomField</name>
-	</types>
-	<types>
-		<members>Create_Primary_Joint_Owner</members>
-		<name>Flow</name>
-	</types>
-	<types>
-		<members>leadJointOwnerAction</members>
-		<name>LightningComponentBundle</name>
-	</types>
-	<types>
-		<members>Lead.Manage_Joint_Owners</members>
-		<name>QuickAction</name>
 	</types>
 	<version>68.0</version>
 </Package>
