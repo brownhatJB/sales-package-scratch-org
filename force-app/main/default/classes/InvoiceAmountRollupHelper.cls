@@ -1,3 +1,13 @@
+/**
+ * @module            : Real_Estate_Module
+ * @description       : 
+ * @namespace         :
+ * @author            : Jouhar C
+ * @group             : 
+ * @last modified on  : 19-Oct-2026
+ * @last modified by  : Jouhar C
+ **/
+
 public with sharing class InvoiceAmountRollupHelper implements TriggerAction.AfterInsert {
     
     public void afterInsert(List<Invoice__c> newInvoices) {

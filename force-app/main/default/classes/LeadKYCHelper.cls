@@ -1,3 +1,13 @@
+/**
+ * @module            : Real_Estate_Module
+ * @description       : 
+ * @namespace         :
+ * @author            : Jouhar C
+ * @group             : 
+ * @last modified on  : 10-Oct-2026
+ * @last modified by  : Jouhar C
+ **/
+
 public without sharing class LeadKYCHelper implements TriggerAction.AfterUpdate, TriggerAction.AfterInsert {
 
     public void afterInsert(List<Lead> newLeads) {
