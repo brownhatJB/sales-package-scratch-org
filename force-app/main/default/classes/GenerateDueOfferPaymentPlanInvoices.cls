@@ -1,6 +1,12 @@
 public with sharing class GenerateDueOfferPaymentPlanInvoices implements TriggerAction.AfterUpdate {
     
     public void afterUpdate(List<Offer__c> newOffers, List<Offer__c> oldOffers) {
+        Feature_Control__c setting = Feature_Control__c.getOrgDefaults();
+
+        if(setting != null && !setting.GenerateDueOfferPaymentPlanInvoices__c) {
+            return;
+        }
+
         handleInvoiceGeneration(newOffers, oldOffers);
     }
 

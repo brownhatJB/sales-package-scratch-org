@@ -1,6 +1,12 @@
 public with sharing class GenerateDuePaymentPlanInvoicesHelper implements TriggerAction.AfterInsert {
     
     public void afterInsert(List<Unit_Sale__c> newUnitSales) {
+        Feature_Control__c setting = Feature_Control__c.getOrgDefaults();
+
+        if(setting != null && !setting.GenerateDueUnitSaleInvoices__c) {
+            return;
+        }
+
         generateDueUnitSaleInvoices(newUnitSales);
     }
 
