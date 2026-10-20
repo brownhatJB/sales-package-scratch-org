@@ -44,6 +44,7 @@ public with sharing class GenerateDuePaymentPlanInvoicesHelper implements Trigge
             ];
 
             if(!paymentPlanItems.isEmpty()) {
+                System.debug('===========Before calling AutoInvoiceService===========');
                 AutoInvoiceService.generateInvoices(paymentPlanItems);
             }
         } catch(Exception e) {

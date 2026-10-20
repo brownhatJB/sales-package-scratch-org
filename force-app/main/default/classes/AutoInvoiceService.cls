@@ -20,6 +20,7 @@ public with sharing class AutoInvoiceService {
             Batch_Invoices__c batchInvoice = createBatchInvoice(paymentPlanItems);
 
             List<Invoice__c> invoicesToCreate = createInvoices(paymentPlanItems, batchInvoice.Id);
+            System.debug('=========Inside generateInvoices=========');
 
             if(invoicesToCreate.isEmpty()) {
                 return;
@@ -45,7 +46,12 @@ public with sharing class AutoInvoiceService {
             Invoice_Generation_Date__c = System.today()
         );
 
-        insert batchInvoice;
+        try {
+            insert batchInvoice;
+        } catch(Exception e) {
+            throw new AuraHandledException('we could not create BatchInvoice' + e.getMessage());
+        }
+        
 
         return batchInvoice;
     }
