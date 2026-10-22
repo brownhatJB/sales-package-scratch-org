@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <label>Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Payment_Received__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Not Invoiced</fullName>
+                <default>true</default>
+                <label>Not Invoiced</label>
+            </value>
+            <value>
+                <fullName>Received</fullName>
+                <default>false</default>
+                <label>Received</label>
+            </value>
+            <value>
+                <fullName>Partially Received</fullName>
+                <default>false</default>
+                <label>Partially Received</label>
+            </value>
+            <value>
+                <fullName>Invoiced</fullName>
+                <default>false</default>
+                <label>Invoiced</label>
+            </value>
+            <value>
+                <fullName>Payment Delayed</fullName>
+                <default>false</default>
+                <label>Payment Delayed</label>
+            </value>
+            <value>
+                <fullName>Notification Stage 1</fullName>
+                <default>false</default>
+                <label>Notification Stage 1</label>
+            </value>
+            <value>
+                <fullName>Notification Stage 2</fullName>
+                <default>false</default>
+                <label>Notification Stage 2</label>
+            </value>
+            <value>
+                <fullName>Notification Stage 3</fullName>
+                <default>false</default>
+                <label>Notification Stage 3</label>
+            </value>
+            <value>
+                <fullName>Referred to Legal</fullName>
+                <default>false</default>
+                <label>Referred to Legal</label>
+            </value>
+            <value>
+                <fullName>Final Notification Stage</fullName>
+                <default>false</default>
+                <label>Final Notification Stage</label>
+            </value>
+            <value>
+                <fullName>Contract Terminated</fullName>
+                <default>false</default>
+                <label>Contract Terminated</label>
+            </value>
+            <value>
+                <fullName>Forced Cancellation</fullName>
+                <default>false</default>
+                <label>Forced Cancellation</label>
+            </value>
+            <value>
+                <fullName>Normal Cancellation</fullName>
+                <default>false</default>
+                <label>Normal Cancellation</label>
+            </value>
+            <value>
+                <fullName>Pending</fullName>
+                <default>false</default>
+                <label>Pending</label>
+            </value>
+            <value>
+                <fullName>Under Realization</fullName>
+                <default>false</default>
+                <label>Under Realization</label>
+            </value>
+            <value>
+                <fullName>Partially Realized</fullName>
+                <default>false</default>
+                <label>Partially Realized</label>
+            </value>
+            <value>
+                <fullName>Realized</fullName>
+                <default>false</default>
+                <label>Realized</label>
+            </value>
+            <value>
+                <fullName>Cancelled</fullName>
+                <default>false</default>
+                <label>Cancelled</label>
+            </value>
+            <value>
+                <fullName>Pending Verification</fullName>
+                <default>false</default>
+                <label>Pending Verification</label>
+            </value>
+            <value>
+                <fullName>Partially Invoiced</fullName>
+                <default>false</default>
+                <label>Partially Invoiced</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>No</controllingFieldValue>
+            <valueName>Not Invoiced</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>No</controllingFieldValue>
+            <valueName>Partially Received</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>No</controllingFieldValue>
+            <valueName>Invoiced</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>No</controllingFieldValue>
+            <valueName>Partially Invoiced</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>No</controllingFieldValue>
+            <controllingFieldValue>Yes</controllingFieldValue>
+            <valueName>Forced Cancellation</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>No</controllingFieldValue>
+            <controllingFieldValue>Yes</controllingFieldValue>
+            <valueName>Cancelled</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>No</controllingFieldValue>
+            <valueName>Pending Verification</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Yes</controllingFieldValue>
+            <valueName>Received</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Yes</controllingFieldValue>
+            <valueName>Partially Realized</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Yes</controllingFieldValue>
+            <valueName>Realized</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

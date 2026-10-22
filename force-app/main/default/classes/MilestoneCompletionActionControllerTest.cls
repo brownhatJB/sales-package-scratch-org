@@ -95,10 +95,12 @@ private class MilestoneCompletionActionControllerTest {
     @IsTest
     static void testUpdateCompletion_Tentative_Success() {
         User testUser = getTestUser();
+        Milestone__c m;
+        Date newDate = Date.today().addDays(15);
+        String comments = 'Updated tentative date for testing.';
+
         System.runAs(testUser) {
-            Milestone__c m = createMilestone(Date.today().addDays(10), null);
-            Date newDate = Date.today().addDays(15);
-            String comments = 'Updated tentative date for testing.';
+            m = createMilestone(Date.today().addDays(10), null);
 
             Test.startTest();
             MilestoneCompletionActionController.updateCompletion(
@@ -133,22 +135,23 @@ private class MilestoneCompletionActionControllerTest {
                 updated.Comments__c,
                 'Comments should be set'
             );
-
-            List<FeedItem> posts = [
-                SELECT Body
-                FROM FeedItem
-                WHERE ParentId = :m.Id
-            ];
-            System.assertEquals(1, posts.size(), 'One Chatter post expected');
-            System.assert(
-                posts[0].Body.contains('Tentative Completion Date'),
-                'Chatter should mention Tentative'
-            );
-            System.assert(
-                posts[0].Body.contains(comments),
-                'Chatter should contain comments'
-            );
         }
+
+        // FeedItem query runs outside runAs (as admin)
+        List<FeedItem> posts = [
+            SELECT Body
+            FROM FeedItem
+            WHERE ParentId = :m.Id
+        ];
+        System.assertEquals(1, posts.size(), 'One Chatter post expected');
+        System.assert(
+            posts[0].Body.contains('Tentative Completion Date'),
+            'Chatter should mention Tentative'
+        );
+        System.assert(
+            posts[0].Body.contains(comments),
+            'Chatter should contain comments'
+        );
     }
 
     @IsTest
@@ -185,10 +188,12 @@ private class MilestoneCompletionActionControllerTest {
     @IsTest
     static void testUpdateCompletion_Actual_Success() {
         User testUser = getTestUser();
+        Milestone__c m;
+        Date newDate = Date.today();
+        String comments = 'Milestone completed today.';
+
         System.runAs(testUser) {
-            Milestone__c m = createMilestone(Date.today().addDays(10), null);
-            Date newDate = Date.today();
-            String comments = 'Milestone completed today.';
+            m = createMilestone(Date.today().addDays(10), null);
 
             Test.startTest();
             MilestoneCompletionActionController.updateCompletion(
@@ -218,18 +223,19 @@ private class MilestoneCompletionActionControllerTest {
                 updated.Comments__c,
                 'Comments should be set'
             );
-
-            List<FeedItem> posts = [
-                SELECT Body
-                FROM FeedItem
-                WHERE ParentId = :m.Id
-            ];
-            System.assertEquals(1, posts.size());
-            System.assert(
-                posts[0].Body.contains('Actual Completion Date'),
-                'Chatter should mention Actual'
-            );
         }
+
+        // FeedItem query runs outside runAs (as admin)
+        List<FeedItem> posts = [
+            SELECT Body
+            FROM FeedItem
+            WHERE ParentId = :m.Id
+        ];
+        System.assertEquals(1, posts.size());
+        System.assert(
+            posts[0].Body.contains('Actual Completion Date'),
+            'Chatter should mention Actual'
+        );
     }
 
     @IsTest

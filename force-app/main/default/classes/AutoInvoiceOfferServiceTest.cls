@@ -254,7 +254,7 @@ private class AutoInvoiceOfferServiceTest {
                 Invoice_Amount__c          = 1500
             );
 
-            TriggerBase.bypass('Offer_Payment_Plan_Item__c');
+            //TriggerBase.bypass('Offer_Payment_Plan_Item__c');
 
             Test.startTest();
             AutoInvoiceOfferService.updatePaymentPlanItems(
@@ -263,7 +263,7 @@ private class AutoInvoiceOfferServiceTest {
             );
             Test.stopTest();
 
-            TriggerBase.clearBypass('Offer_Payment_Plan_Item__c');
+            //TriggerBase.clearBypass('Offer_Payment_Plan_Item__c');
 
             Offer_Payment_Plan_Item__c updated = [
                 SELECT Status__c, Invoiced_Amount__c, Batch_Invoices__c,
