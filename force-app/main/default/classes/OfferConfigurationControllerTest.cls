@@ -112,10 +112,10 @@ private class OfferConfigurationControllerTest {
             );
 
             Test.startTest();
-            TriggerBase.bypass('Offer__c');
+            //TriggerBase.bypass('Offer__c');
             List<Id> offerIds =
                 OfferConfigurationController.createConfiguredOffers(dataJson);
-            TriggerBase.clearBypass('Offer__c');    
+            //TriggerBase.clearBypass('Offer__c');    
             Test.stopTest();
 
             System.assertEquals(1, offerIds.size(), 'One offer should be created');
@@ -158,10 +158,10 @@ private class OfferConfigurationControllerTest {
             );
 
             Test.startTest();
-            TriggerBase.bypass('Offer__c');
+            //TriggerBase.bypass('Offer__c');
             List<Id> offerIds =
                 OfferConfigurationController.createConfiguredOffers(dataJson);
-            TriggerBase.clearBypass('Offer__c');
+            //TriggerBase.clearBypass('Offer__c');
             Test.stopTest();
 
             System.assertEquals(1, offerIds.size());
