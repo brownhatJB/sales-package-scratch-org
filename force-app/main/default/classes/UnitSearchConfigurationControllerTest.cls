@@ -2,7 +2,7 @@
 private class UnitSearchConfigurationControllerTest {
 
     private static User getTestUser() {
-        return TestUserFactoryBase.createUserWithPackageAccess();
+        return TestUserFactory.createUserWithPackageAccess();
     }
 
     @IsTest

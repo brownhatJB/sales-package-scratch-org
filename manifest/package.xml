@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
-		<members>UnitsearchDynamicSoqlTest</members>
+		<members>MilestoneTriggerUpdateTest</members>
+		<members>SalesProposalGeneratePPIHelperTest</members>
+		<members>SalesProposalGeneratePaymentPlanHelper</members>
 		<name>ApexClass</name>
 	</types>
 	<version>68.0</version>

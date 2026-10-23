@@ -2,7 +2,7 @@
 private class MilestoneCompletionActionControllerTest {
 
     private static User getTestUser() {
-        return TestUserFactoryBase.createUserWithPackageAccess();
+        return TestUserFactory.createUserWithPackageAccess();
     }
 
     // ─── Test data factory ───────────────────────────────────────────────────
